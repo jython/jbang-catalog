@@ -150,3 +150,11 @@ jbang run jython-cli@jython restclient.py
   "completed": false
 }
 ```
+
+## Articles about Jython and JBang
+
+The following articles describe the work that led to the creation of the `jython-cli` JBang script.
+
+* [Medium.com - Running Jython scripts with JBang using a Java helper program (Part 1)](https://medium.com/@werner.fouche/running-jython-scripts-with-jbang-using-a-java-helper-program-9ab9f8e35ddc)
+* [Medium.com - Running Jython scripts with JBang using PEP 723 (Part 2)](https://medium.com/@werner.fouche/running-jython-scripts-with-jbang-part-2-d13b3699c015)
+
