@@ -151,6 +151,16 @@ jbang run jython-cli@jython restclient.py
 }
 ```
 
+## Development testing
+
+If the `jython_cli.java` program is modified and needs to be tested (before changes
+are submitted to the repo), the example scripts can be used as tests and run 
+locally:
+
+* jbang run jython-cli examples/banner.py
+* jbang run jython-cli examples/restclient.py
+* jbang run jython-cli examples/httpserver.py
+
 ## Articles about Jython and JBang
 
 The following articles describe the work that led to the creation of the `jython-cli` JBang script.
