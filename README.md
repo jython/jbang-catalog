@@ -92,7 +92,7 @@ main()
 jbang run jython-cli@jython --version
 ```
 
-```aiexclude
+```
 2.7.4.0
 ```
 
@@ -102,7 +102,7 @@ jbang run jython-cli@jython --version
 jbang run jython-cli@jython -c "print(1+2)"
 ```
 
-```aiexclude
+```
 3
 ```
 
@@ -112,7 +112,7 @@ jbang run jython-cli@jython -c "print(1+2)"
 jbang run jython-cli@jython
 ```
 
-```aiexclude
+```
 Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 10:30:53)
 [OpenJDK 64-Bit Server VM (Eclipse Adoptium)] on java21.0.6
 Type "help", "copyright", "credits" or "license" for more information.
@@ -125,7 +125,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 Script `banner.py` is located in folder `https://github.com/jython/jbang-catalog/examples`.
 
-```aiexclude
+```
 jbang run jython-cli@jython banner.py
 
 ['banner.py']
@@ -140,7 +140,7 @@ jbang run jython-cli@jython banner.py
 
 Script `restclient.py` is located in folder `https://github.com/jython/jbang-catalog/examples`.
 
-```aiexclude
+```
 jbang run jython-cli@jython restclient.py
 
 {
