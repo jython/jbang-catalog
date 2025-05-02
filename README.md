@@ -151,6 +151,16 @@ jbang run jython-cli@jython restclient.py
 }
 ```
 
+## Example 6 - Turtle Graphics
+
+Script `turtle.py` is located in folder `https://github.com/jython/jbang-catalog/examples`.
+
+```
+jbang run jython-cli@jython turtle.py
+```
+
+![Alt text](images/turtle.png)
+
 ## Development testing
 
 If the `jython_cli.java` program is modified and needs to be tested (before changes
