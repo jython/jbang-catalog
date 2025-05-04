@@ -43,8 +43,8 @@ provided that the first line of the script contains text:
 [Jython metadata for JBang]
 ```
 # /// jbang
-# requires-jython = ">=2.7.4"
-# requires-java = ">=21"
+# requires-jython = "2.7.4"
+# requires-java = "21"
 # dependencies = [
 #   "io.leego:banana:2.1.0"
 # ]
@@ -61,8 +61,8 @@ provided that the first line of the script contains text:
 # banner.py
 
 # /// jbang
-# requires-jython = ">=2.7.4"
-# requires-java = ">=21"
+# requires-jython = "2.7.4"
+# requires-java = "21"
 # dependencies = [
 #   "io.leego:banana:2.1.0",
 # ]
