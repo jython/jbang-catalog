@@ -1,8 +1,8 @@
 #!/usr/bin/env jython-cli
 
 # /// jbang
-# requires-jython = ">=2.7.4"
-# requires-java = ">=21"
+# requires-jython = "2.7.4"
+# requires-java = "21"
 # dependencies = [
 #   "io.undertow:undertow-core:2.3.18.Final"
 # ]

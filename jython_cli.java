@@ -133,10 +133,10 @@ public class jython_cli {
                 System.out.println("");
             }
             if (tpr.isString("requires-jython")) {
-                jythonVersion = tpr.getString("requires-jython").substring(2);
+                jythonVersion = tpr.getString("requires-jython");
             }
             if (tpr.isString("requires-java")) {
-                javaVersion = tpr.getString("requires-java").substring(2);
+                javaVersion = tpr.getString("requires-java");
             }
             // dependencies
             for (Object e : tpr.getArrayOrEmpty("dependencies").toList()) {

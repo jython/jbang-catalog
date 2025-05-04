@@ -16,8 +16,8 @@
 # ------------------------------------------
 
 # /// jbang
-# requires-jython = ">=2.7.4"
-# requires-java = ">=21"
+# requires-jython = "2.7.4"
+# requires-java = "21"
 # dependencies = [
 #   "ch.aplu.turtle:aplu5:0.1.9",
 # ]

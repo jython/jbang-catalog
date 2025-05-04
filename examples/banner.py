@@ -3,8 +3,8 @@
 # banner.py
 
 # /// jbang
-# requires-jython = ">=2.7.4"
-# requires-java = ">=21"
+# requires-jython = "2.7.4"
+# requires-java = "21"
 # dependencies = [
 #   "io.leego:banana:2.1.0",
 # ]
