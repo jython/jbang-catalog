@@ -18,7 +18,7 @@ import org.python.util.jython;
 
 public class jython_cli {
 
-    // Increment this number with each new release of python-cli
+    // Increment this number with each new release of jython-cli
     private static final int FIX_NUMBER = 0;  
 
     private static final String textJythonApp = """
