@@ -2,7 +2,7 @@
   "aliases": {
     "jython-cli": {
       "script-ref": "jython_cli.java",
-      "description": "Run Jython 2.7.4"
+      "description": "Run Jython 2.7"
     }
   }
 }
