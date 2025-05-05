@@ -19,6 +19,8 @@ import org.python.util.jython;
 public class jython_cli {
 
     // Increment this number with each new release of jython-cli
+    // But if the version number of Jython changes (for example 2.7.4 becomes 2.7.5), then
+    // the FIX_NUMBER is reset to 0 again.
     private static final int FIX_NUMBER = 0;  
 
     private static final String textJythonApp = """
