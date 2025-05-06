@@ -45,6 +45,7 @@ public class jython_cli {
         String javaRuntimeOptions = "";
         String ls = System.lineSeparator();
         boolean debug = false;
+        StringBuilder tomlText = new StringBuilder("");
 
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
@@ -61,8 +62,31 @@ public class jython_cli {
             }
         }
 
-        // Invoke the Jython interpreter if no Python script file is specified, or Jython command-line options are specified
-        if (scriptFilename.equals("")) {
+        // Extract TOML data
+        if (scriptFilename.length() > 0) {
+            List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
+            boolean found = false;
+            for (String line: lines) {
+                if (line.startsWith("# /// jbang")) {
+                    found = true;
+                }
+                else if (line.startsWith("# ///")) {
+                    found = false;
+                    break;
+                } else if (line.startsWith("# ")) {
+                    if (found) {
+                        if (tomlText.length() == 0) {
+                            tomlText.append(line.substring(2));
+                        } else {
+                            tomlText.append(ls + line.substring(2));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Invoke the Jython interpreter if no Python script file is specified, or the script has no TOML data
+        if (tomlText.toString().equals("")) {
             jython.main(args);
             System.exit(0);
         }
@@ -72,28 +96,6 @@ public class jython_cli {
 
         // Parse PEP 723 text block
         {
-            StringBuffer tomlText = new StringBuffer("");
-            {
-                List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-                boolean found = false;
-                for (String line: lines) {
-                    if (line.startsWith("# /// jbang")) {
-                        found = true;
-                    }
-                    else if (line.startsWith("# ///")) {
-                        found = false;
-                        break;
-                    } else if (line.startsWith("# ")) {
-                        if (found) {
-                            if (tomlText.length() == 0) {
-                                tomlText.append(line.substring(2));
-                            } else {
-                                tomlText.append(ls + line.substring(2));
-                            }
-                        }
-                    }
-                }
-            }
             TomlParseResult tpr = Toml.parse(tomlText.toString());
             // [jython-cli]
             TomlTable pythonjvmTable = tpr.getTable("jython-cli");
@@ -173,7 +175,7 @@ public class jython_cli {
 
         // jbang run <script>_py.java param1 param2 ...
         {
-            StringBuffer params = new StringBuffer("run");
+            StringBuilder params = new StringBuilder("run");
 
             params.append(" " + javaFilename);
             for (int i = 0; i < args.length; i++) {
