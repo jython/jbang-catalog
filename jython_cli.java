@@ -104,10 +104,10 @@ public class jython_cli {
             }
             if (debug) {
                 System.out.println("");
-                System.out.println("[ -----------------jbang-config-begin-------------------- ]");
+                System.out.println("[ -----------------jbang-toml-config-begin-------------------- ]");
                 System.out.println("");
                 System.out.println(tpr.toToml());
-                System.out.println("[ -----------------jbang-config-end---------------------- ]");
+                System.out.println("[ -----------------jbang-toml-config-end---------------------- ]");
                 System.out.println("");
             }
             if (tpr.isString("requires-jython")) {
@@ -149,8 +149,26 @@ public class jython_cli {
         }
 
         // register javaFilename to be deleted when the JVM exits
-        if (!debug) {
-            new File(javaFilename).deleteOnExit();
+        new File(javaFilename).deleteOnExit();
+
+        // display the Java shim file
+        if (debug) {
+            System.out.println("");
+            System.out.println("[ -----------------java-shim-file-begin----------------------- ]");
+            System.out.println("");
+            try {
+                // Step 2: Call Files.readAllLines() to read the file content
+                List<String> lines = Files.readAllLines(Paths.get(javaFilename));
+
+                // Print each line to the console
+                lines.forEach(System.out::println);
+            } catch (IOException e) {
+                // Step 3: Handle the IOException
+                e.printStackTrace();
+            }
+            System.out.println("");
+            System.out.println("[ -----------------java-shim-file-end------------------------- ]");
+            System.out.println("");
         }
 
         // jbang run <script>_py.java param1 param2 ...
