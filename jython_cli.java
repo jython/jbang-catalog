@@ -141,7 +141,9 @@ public class jython_cli {
         }
 
         // register javaFilename to be deleted when the JVM exits
-        // new File(javaFilename).deleteOnExit();
+        if (!debug) {
+            new File(javaFilename).deleteOnExit();
+        }
 
         // jbang run <script>_py.java param1 param2 ...
         {
