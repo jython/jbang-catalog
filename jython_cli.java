@@ -52,13 +52,21 @@ public class jython_cli {
             System.exit(0); 
         }
 
+        // Determine the Jython script filename, if it exists
+        String scriptFilename = "";
+        for (String arg: args) {
+            if (arg.endsWith(".py")) {
+                scriptFilename = arg;
+                break;
+            }
+        }
+
         // Invoke the Jython interpreter if no Python script file is specified, or Jython command-line options are specified
-        if (args.length == 0 || (args.length > 0 && args[0].substring(0,1).equals("-"))) {
+        if (scriptFilename.equals("")) {
             jython.main(args);
             System.exit(0);
         }
 
-        String scriptFilename = args[0];
         String javaClassname = new File(scriptFilename).getName().replace(".", "_");
         String javaFilename = javaClassname + ".java";
 
