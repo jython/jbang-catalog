@@ -2,7 +2,7 @@
 
 //DEPS dev.jbang:jash:0.0.3
 //DEPS org.tomlj:tomlj:1.1.1
-//DEPS org.python:jython-standalone:2.7.4
+//DEPS org.python:jython-slim:2.7.4
 //JAVA 21
 
 import java.io.*;
@@ -43,6 +43,7 @@ public class jython_cli {
         String jythonVersion = "2.7.4";
         String javaVersion = "21";
         String javaRuntimeOptions = "";
+        String ls = System.lineSeparator();
         boolean debug = false;
 
         // --version
@@ -122,7 +123,7 @@ public class jython_cli {
             }
         }
 
-        String dep = "org.python:jython-standalone:" + jythonVersion;
+        String dep = "org.python:jython-slim:" + jythonVersion;
         deps.add(dep);
 
         try (BufferedWriter jf = new BufferedWriter(new FileWriter(javaFilename))) {
