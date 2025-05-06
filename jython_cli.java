@@ -162,7 +162,7 @@ public class jython_cli {
                 params.append(" " + args[i]);
             }
             if (debug) {
-                System.out.println("[debug] jbang " + params.toString());
+                System.out.println("jbang " + params.toString());
                 System.out.println();
             }
             String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
