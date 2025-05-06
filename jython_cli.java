@@ -26,45 +26,15 @@ public class jython_cli {
     private static final int FIX_NUMBER = 0;  
 
     private static final String textJythonApp = """
-            import org.python.util.PythonInterpreter;
-            import java.util.Base64;
+            
+            import org.python.util.jython;
             
             public class __CLASSNAME__ {
             
-                public static String mainScriptTextBase64 = "__MAIN_SCRIPT__";
- 
-                public static void main(String... args) {
-                    String mainScriptFilename = "__MAIN_SCRIPT_FILENAME__";
-                    String mainScript = "";
-                    String pythonArgsScript = "";
-                    for (String arg: args) {
-                        if (pythonArgsScript.length() == 0) {
-                            if (!arg.equals(mainScriptFilename)) {
-                                pythonArgsScript += "'" + mainScriptFilename + "', ";
-                            }
-                        } else {
-                            pythonArgsScript += ", ";
-                        }
-                        pythonArgsScript += "'" + arg + "'";
-                    }
-                    if (pythonArgsScript.length() == 0) {
-                        pythonArgsScript = "'" + mainScriptFilename + "'";
-                    }
-                    pythonArgsScript = "import sys; sys.argv = [" + pythonArgsScript + "]";
-                    {
-                        byte[] decodedBytes = Base64.getDecoder().decode(mainScriptTextBase64);
-                        String text = new String(decodedBytes);
-                        mainScript = text;
-                    }
-                    {
-                        // create Python interpreter object
-                        PythonInterpreter pyInterp = new PythonInterpreter();
-                        // initialize command-line args
-                        pyInterp.exec(pythonArgsScript);
-                        // run script
-                        pyInterp.exec(mainScript);
-                    }
+                public static void main(String[] args) {
+                    jython.main(args);
                 }
+            
             }            
             """;
 
@@ -73,8 +43,6 @@ public class jython_cli {
         String jythonVersion = "2.7.4";
         String javaVersion = "21";
         String javaRuntimeOptions = "";
-        String jbangIntegrations = "true";
-        String ls = System.lineSeparator();
         boolean debug = false;
 
         // --version
@@ -118,15 +86,12 @@ public class jython_cli {
                 }
             }
             TomlParseResult tpr = Toml.parse(tomlText.toString());
-            // [python-jvm]
+            // [jython-cli]
             TomlTable pythonjvmTable = tpr.getTable("jython-cli");
             if (pythonjvmTable != null) {
                 if (pythonjvmTable.isBoolean("debug")) {
                     debug = pythonjvmTable.getBoolean("debug");
                 }
-            }
-            if (debug) {
-                System.out.println("[debug] python-jvm init " + javaFilename + " from " + scriptFilename);
             }
             if (debug) {
                 System.out.println("");
@@ -155,25 +120,13 @@ public class jython_cli {
                     javaRuntimeOptions = runtimeOptions;
                 }
             }
-            // [jbang]
-            TomlTable jbangTable = tpr.getTable("jbang");
-            if (jbangTable != null) {
-                Boolean integrations = jbangTable.getBoolean("integrations");
-                if (integrations != null && integrations.equals(Boolean.FALSE)) {
-                    jbangIntegrations = "false";
-                }
-            }
         }
 
         String dep = "org.python:jython-standalone:" + jythonVersion;
         deps.add(dep);
 
-        byte[] data = Files.readAllBytes(Paths.get(scriptFilename));
-        String scriptFileTextB64 = Base64.getEncoder().encodeToString(data);
-
         try (BufferedWriter jf = new BufferedWriter(new FileWriter(javaFilename))) {
             jf.write("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?" + ls + ls);
-            jf.write("// spotless:off" + ls);
             for (String dependency : deps) {
                 jf.write("//DEPS " + dependency + ls);
             }
@@ -181,29 +134,26 @@ public class jython_cli {
             if (javaRuntimeOptions.length() > 0) {
                 jf.write("//RUNTIME_OPTIONS " + javaRuntimeOptions + ls);
             }
-            if (jbangIntegrations.equals("false")) {
-                jf.write("//NOINTEGRATIONS" + ls);
-            }
-            jf.write("// spotless:on" + ls + ls);
             String text = textJythonApp;
-            String jtext = text.replace("__CLASSNAME__", javaClassname)
-                               .replace("__MAIN_SCRIPT__", scriptFileTextB64)
-                               .replace("__MAIN_SCRIPT_FILENAME__", scriptFilename);
+            String jtext = text.replace("__CLASSNAME__", javaClassname);
             jf.write(jtext);
         }
 
         // register javaFilename to be deleted when the JVM exits
-        new File(javaFilename).deleteOnExit();
+        // new File(javaFilename).deleteOnExit();
 
         // jbang run <script>_py.java param1 param2 ...
         {
             StringBuffer params = new StringBuffer("run");
 
             params.append(" " + javaFilename);
-            for (int i = 1; i < args.length; i++) {
+            for (int i = 0; i < args.length; i++) {
                 params.append(" " + args[i]);
             }
-            //if (debug) System.out.println("[debug] jbang " + params.toString());
+            if (debug) {
+                System.out.println("[debug] jbang " + params.toString());
+                System.out.println();
+            }
             String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
             var jargs = params.toString().split("\\s+");
             try (Stream<String> ps = Jash.start("jbang" + ext, jargs).stream()) {

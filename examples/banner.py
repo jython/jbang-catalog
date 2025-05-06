@@ -10,6 +10,8 @@
 # ]
 # [java]
 #   runtime-options = ""
+# [jython-cli]
+#   debug = false
 # ///
 
 import sys

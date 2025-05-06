@@ -8,6 +8,8 @@
 # ]
 # [java]
 #   runtime-options = "-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
+# [jython-cli]
+#   debug = false
 # ///
 
 import io.undertow.Undertow as Undertow
