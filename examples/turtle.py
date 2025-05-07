@@ -2,6 +2,18 @@
 
 # turtle.py
 
+# /// jbang
+# requires-jython = "2.7.4"
+# requires-java = "21"
+# dependencies = [
+#   "ch.aplu.turtle:aplu5:0.1.9"
+# ]
+# [java]
+#   runtime-options = ""
+# [jython-cli]
+#   debug = false
+# ///
+
 # ------------------------------------------
 #
 # aplu5.jar is not published to Maven Central
@@ -14,19 +26,6 @@
 #  (2 - Install file ) $ mvn install:install-file -Dfile=./aplu5.jar -DgroupId=ch.aplu.turtle -DartifactId=aplu5 -Dversion=0.1.9 -Dpackaging=jar
 #
 # ------------------------------------------
-
-# /// jbang
-# requires-jython = "2.7.4"
-# requires-java = "21"
-# dependencies = [
-#   "ch.aplu.turtle:aplu5:0.1.9",
-# ]
-# [java]
-#   runtime-options = ""
-# [jython-cli]
-#   debug = false
-# ///
-
 
 import ch.aplu.turtle.TurtleFrame as TurtleFrame
 import ch.aplu.turtle.Turtle as Turtle
