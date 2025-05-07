@@ -3,7 +3,7 @@
 //DEPS dev.jbang:jash:0.0.3
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.python:jython-slim:2.7.4
-//JAVA 21
+//JAVA 8
 
 import java.io.*;
 import java.nio.file.*;
@@ -25,19 +25,20 @@ public class jython_cli {
     // FIX_NUMBER is reset to 0 again, e.g. 2.7.5.0
     private static final int FIX_NUMBER = 0;  
 
-    private static final String textJythonApp = """
-            
-            import org.python.util.jython;
-            
-            public class __CLASSNAME__ {
-            
-                public static void main(String[] args) {
-                    System.setProperty("python.console.encoding", "UTF-8");
-                    jython.main(args);
-                }
-            
-            }            
-            """;
+    private static final String textJythonApp = String.join(
+            System.lineSeparator(),
+            "",
+            "import org.python.util.jython;",
+            "",
+            "public class __CLASSNAME__ {",
+            "",
+            "    public static void main(String[] args) {",
+            "        System.setProperty(\"python.console.encoding\", \"UTF-8\");",
+            "        jython.main(args);",
+            "    }",
+            "",
+            "}",
+            "");
 
     public static void main(String[] args) throws IOException {
         List<String> deps = new ArrayList<>();
@@ -188,7 +189,7 @@ public class jython_cli {
                 System.out.println();
             }
             String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
-            var jargs = params.toString().split("\\s+");
+            String[] jargs = params.toString().split("\\s+");
             try (Stream<String> ps = Jash.start("jbang" + ext, jargs).stream()) {
                     ps.forEach(System.out::println);
             }
