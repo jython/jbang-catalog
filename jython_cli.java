@@ -177,7 +177,7 @@ public class jython_cli {
 
         // jbang run <script>_py.java param1 param2 ...
         {
-            StringBuilder params = new StringBuilder("run");
+            StringBuilder params = new StringBuilder("run --java-options=-Dpython.console.encoding=UTF-8");
 
             params.append(" " + javaFilename);
             for (int i = 0; i < args.length; i++) {

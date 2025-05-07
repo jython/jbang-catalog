@@ -21,6 +21,8 @@ import io.leego.banana.Font as Font
 
 def main():
     print(sys.argv)
+    #print("sys.stdout.encoding = " + sys.stdout.encoding)
+    #print("sys.stdin.encoding = " + sys.stdin.encoding)
 
     text0 = "Jython 2.7"
     text1 = BananaUtils.bananaify(text0, Font.STANDARD)
