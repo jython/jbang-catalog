@@ -47,6 +47,8 @@ public class jython_cli {
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
 
+        System.setProperty("python.console.encoding", "UTF-8");
+
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
             System.out.println(jythonVersion + "." + FIX_NUMBER);
