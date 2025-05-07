@@ -32,6 +32,7 @@ public class jython_cli {
             public class __CLASSNAME__ {
             
                 public static void main(String[] args) {
+                    System.setProperty("python.console.encoding", "UTF-8");
                     jython.main(args);
                 }
             
@@ -46,8 +47,6 @@ public class jython_cli {
         String ls = System.lineSeparator();
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
-
-        System.setProperty("python.console.encoding", "UTF-8");
 
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
@@ -89,6 +88,7 @@ public class jython_cli {
 
         // Invoke the Jython interpreter if no Python script file is specified, or the script has no TOML data
         if (tomlText.toString().equals("")) {
+            System.setProperty("python.console.encoding", "UTF-8");
             jython.main(args);
             System.exit(0);
         }
@@ -177,7 +177,7 @@ public class jython_cli {
 
         // jbang run <script>_py.java param1 param2 ...
         {
-            StringBuilder params = new StringBuilder("run --java-options=-Dpython.console.encoding=UTF-8");
+            StringBuilder params = new StringBuilder("run");
 
             params.append(" " + javaFilename);
             for (int i = 0; i < args.length; i++) {
