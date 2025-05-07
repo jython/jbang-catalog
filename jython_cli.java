@@ -5,6 +5,10 @@
 //DEPS org.python:jython-slim:2.7.4
 //JAVA 8
 
+// Java 8 is supported at least until the end of 2026
+// Thereafter, switch to Java 21
+// See https://adoptium.net/support/#_release_roadmap
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
