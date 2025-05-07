@@ -171,6 +171,7 @@ locally:
 * jbang run jython-cli examples/restclient.py
 * jbang run jython-cli examples/httpserver.py
 * jbang run jython-cli examples/turtle.py
+* jbang run jython-cli examples/simpletest.py
 
 ## Articles about Jython and JBang
 
