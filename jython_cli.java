@@ -3,8 +3,17 @@
 //DEPS dev.jbang:jash:0.0.3
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.python:jython-slim:2.7.4
-//JAVA 8
+//JAVA 21
 
+// jython-cli can be run with Java 8 from the command-line as follows:
+//
+// $ jbang --java 8 jython-cli
+//[jbang] Building jar for jython_cli.java...
+//        Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 16:49:39)
+//        [OpenJDK 64-Bit Server VM (Temurin)] on java1.8.0_452
+//        Type "help", "copyright", "credits" or "license" for more information.
+//        >>>
+//
 // Java 8 is supported at least until the end of 2026
 // Thereafter, switch to Java 21
 // See https://adoptium.net/support/#_release_roadmap
