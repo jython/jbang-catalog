@@ -68,7 +68,7 @@ We took inspiration from https://peps.python.org/pep-0723/[PEP-723] and adopted 
 * Version of Jython to use
 * Version of Java (JDK) to use
 
-The metadata information starts with `# /// jbang` and ends with `# ///`. Each line inbetween these two markers are stripped of the first two characters, and the rest of the line is assumed to be valid TOML data.
+The metadata information starts with `# /// jbang` and ends with `# ///`. Each line in between these two markers are stripped of the first two characters, and the rest of the line is assumed to be valid TOML data.
 
 .banner2.py
 [source,python]
@@ -84,7 +84,7 @@ The metadata information starts with `# /// jbang` and ends with `# ///`. Each l
 #   "io.leego:banana:2.1.0"
 # ]
 # [java]
-#   runtime-options = ""
+#   runtime-options = "-server -Xmx1g -XX:+UseZGC -XX:+ZGenerational"
 # [jython-cli]
 #   debug = false
 # ///
@@ -114,7 +114,7 @@ dependencies = [
   "io.leego:banana:2.1.0"
 ]
 [java]
-  runtime-options = ""
+  runtime-options = "-server -Xmx1g -XX:+UseZGC -XX:+ZGenerational"
 [jython-cli]
   debug = false
 ----
@@ -129,6 +129,7 @@ dependencies = [
 //DEPS io.leego:banana:2.1.0
 //DEPS org.python:jython-slim:2.7.4
 //JAVA 21
+//RUNTIME_OPTIONS -server -Xmx1g -XX:+UseZGC -XX:+ZGenerational
 
 import org.python.util.jython;
 
