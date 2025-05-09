@@ -8,7 +8,8 @@
 // jython-cli can be run with Java 8 from the command-line as follows:
 //
 // $ jbang --java 8 jython-cli
-//[jbang] Building jar for jython_cli.java...
+//
+// [jbang] Building jar for jython_cli.java...
 //        Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 16:49:39)
 //        [OpenJDK 64-Bit Server VM (Temurin)] on java1.8.0_452
 //        Type "help", "copyright", "credits" or "license" for more information.
