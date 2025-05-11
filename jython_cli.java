@@ -32,6 +32,9 @@ import org.python.util.jython;
 
 public class jython_cli {
 
+    private static final String DEFAULT_JYTHON_VERSION = "2.7.4";
+    private static final String DEFAULT_JAVA_VERSION = "21";
+
     // FIX_NUMBER appended to the Jython version forms the version of jython-cli as
     // [Jython version].[FIX_NUMBER], e.g. 2.7.4.0
     // Increment FIX_NUMBER with each new release of jython-cli.
@@ -56,8 +59,8 @@ public class jython_cli {
 
     public static void main(String[] args) throws IOException {
         List<String> deps = new ArrayList<>();
-        String jythonVersion = "2.7.4";
-        String javaVersion = "21";
+        String jythonVersion = DEFAULT_JYTHON_VERSION;
+        String javaVersion = DEFAULT_JAVA_VERSION;
         String javaRuntimeOptions = "";
         String ls = System.lineSeparator();
         boolean debug = false;
