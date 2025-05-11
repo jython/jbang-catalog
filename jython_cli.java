@@ -62,6 +62,7 @@ public class jython_cli {
         String ls = System.lineSeparator();
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
+        TomlParseResult tpr = null;
 
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
@@ -78,18 +79,22 @@ public class jython_cli {
             }
         }
 
-        // Extract TOML data
+        // Extract TOML data (if found)
         if (scriptFilename.length() > 0) {
             List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
             boolean found = false;
             for (String line: lines) {
-                if (line.startsWith("# /// jbang")) {
+                if (found == true && !line.startsWith("# ")) {
+                    found = false;
+                    tomlText = new StringBuilder("");
+                }
+                if (found == false && line.startsWith("# /// jbang")) {
                     found = true;
                 }
-                else if (line.startsWith("# ///")) {
+                else if (found == true && line.startsWith("# ///")) {
                     found = false;
                     break;
-                } else if (line.startsWith("# ")) {
+                } else if (found == true && line.startsWith("# ")) {
                     if (found) {
                         if (tomlText.length() == 0) {
                             tomlText.append(line.substring(2));
@@ -101,58 +106,67 @@ public class jython_cli {
             }
         }
 
-        // Invoke the Jython interpreter if no Python script file is specified, or the script has no TOML data
+        // Invoke the Jython interpreter if 
+        // (a) no Python script file is specified, or 
+        // (b) no TOML data is defined in the script file
+        // In both cases, the tomlText string is empty
         if (tomlText.toString().equals("")) {
             System.setProperty("python.console.encoding", "UTF-8");
             jython.main(args);
             System.exit(0);
         }
 
+        // Create a <scriptname>_py class name and <scriptname>_py.java file name
         String javaClassname = new File(scriptFilename).getName().replace(".", "_");
         String javaFilename = javaClassname + ".java";
 
         // Parse PEP 723 text block
-        {
-            TomlParseResult tpr = Toml.parse(tomlText.toString());
-            // [jython-cli]
-            TomlTable pythonjvmTable = tpr.getTable("jython-cli");
-            if (pythonjvmTable != null) {
-                if (pythonjvmTable.isBoolean("debug")) {
-                    debug = pythonjvmTable.getBoolean("debug");
-                }
-            }
-            if (debug) {
-                System.out.println("");
-                System.out.println("[ -----------------jbang-toml-config-begin-------------------- ]");
-                System.out.println("");
-                System.out.println(tpr.toToml());
-                System.out.println("[ -----------------jbang-toml-config-end---------------------- ]");
-                System.out.println("");
-            }
-            if (tpr.isString("requires-jython")) {
-                jythonVersion = tpr.getString("requires-jython");
-            }
-            if (tpr.isString("requires-java")) {
-                javaVersion = tpr.getString("requires-java");
-            }
-            // dependencies
-            for (Object e : tpr.getArrayOrEmpty("dependencies").toList()) {
-                String dep = (String) e;
-                deps.add(dep);
-            }
-            // [java]
-            TomlTable javaTable = tpr.getTable("java");
-            if (javaTable != null) {
-                String runtimeOptions = javaTable.getString("runtime-options");
-                if (runtimeOptions != null) {
-                    javaRuntimeOptions = runtimeOptions;
-                }
+        tpr = Toml.parse(tomlText.toString());
+
+        // [jython-cli]
+        TomlTable pythonjvmTable = tpr.getTable("jython-cli");
+        if (pythonjvmTable != null) {
+            if (pythonjvmTable.isBoolean("debug")) {
+                debug = pythonjvmTable.getBoolean("debug");
             }
         }
-
+        if (debug) {
+            System.out.println("");
+            System.out.println("[ -----------------jbang-toml-config-begin-------------------- ]");
+            System.out.println("");
+            System.out.println(tpr.toToml());
+            System.out.println("[ -----------------jbang-toml-config-end---------------------- ]");
+            System.out.println("");
+        }
+        if (tpr.isString("requires-jython")) {
+            jythonVersion = tpr.getString("requires-jython");
+        }
+        if (tpr.isString("requires-java")) {
+            javaVersion = tpr.getString("requires-java");
+        }
+        // dependencies
+        for (Object e : tpr.getArrayOrEmpty("dependencies").toList()) {
+            String dep = (String) e;
+            deps.add(dep);
+        }
+        // [java]
+        TomlTable javaTable = tpr.getTable("java");
+        if (javaTable != null) {
+            String runtimeOptions = javaTable.getString("runtime-options");
+            if (runtimeOptions != null) {
+                javaRuntimeOptions = runtimeOptions;
+            }
+        }
+        // Add Jython runtime JAR dependency
         String dep = "org.python:jython-slim:" + jythonVersion;
         deps.add(dep);
 
+        // Create the Java helper program.
+        // The Java helper program is a shim that calls the Jython interpreter
+        // with the same command-line arguments as the Java helper program
+        // The Java helper program is created in the current working directory
+        // and is named <scriptname>_py.java
+        // The Java helper program is deleted when the JVM exits.
         try (BufferedWriter jf = new BufferedWriter(new FileWriter(javaFilename))) {
             jf.write("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?" + ls + ls);
             for (String dependency : deps) {
@@ -167,10 +181,10 @@ public class jython_cli {
             jf.write(jtext);
         }
 
-        // register javaFilename to be deleted when the JVM exits
+        // Register javaFilename for deletion when the JVM exits
         new File(javaFilename).deleteOnExit();
 
-        // display the Java shim file
+        // Display the Java shim file
         if (debug) {
             System.out.println("");
             System.out.println("[ -----------------java-shim-file-begin----------------------- ]");
@@ -191,22 +205,20 @@ public class jython_cli {
         }
 
         // jbang run <script>_py.java param1 param2 ...
-        {
-            StringBuilder params = new StringBuilder("run");
+        StringBuilder params = new StringBuilder("run");
 
-            params.append(" " + javaFilename);
-            for (int i = 0; i < args.length; i++) {
-                params.append(" " + args[i]);
-            }
-            if (debug) {
-                System.out.println("jbang " + params.toString());
-                System.out.println();
-            }
-            String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
-            String[] jargs = params.toString().split("\\s+");
-            try (Stream<String> ps = Jash.start("jbang" + ext, jargs).stream()) {
-                    ps.forEach(System.out::println);
-            }
+        params.append(" " + javaFilename);
+        for (int i = 0; i < args.length; i++) {
+            params.append(" " + args[i]);
+        }
+        if (debug) {
+            System.out.println("jbang " + params.toString());
+            System.out.println();
+        }
+        String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
+        String[] jargs = params.toString().split("\\s+");
+        try (Stream<String> ps = Jash.start("jbang" + ext, jargs).stream()) {
+                ps.forEach(System.out::println);
         }
     }
 }

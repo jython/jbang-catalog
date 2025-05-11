@@ -108,6 +108,8 @@ jbang run jython-cli@jython -c "print(1+2)"
 
 ## Example 3 - run Jython command-line interpreter
 
+**Using Java 21 (default)**
+
 ```bash
 jbang run jython-cli@jython
 ```
@@ -118,6 +120,19 @@ Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 10:30:53)
 Type "help", "copyright", "credits" or "license" for more information.
 >>> print(1+2)
 3
+>>> 
+```
+
+**Using Java 8**
+
+```bash
+jbang run --java 8 jython-cli@jython
+```
+
+```
+Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 16:49:39)
+[OpenJDK 64-Bit Server VM (Temurin)] on java1.8.0_452
+Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
 
