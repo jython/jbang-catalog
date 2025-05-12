@@ -43,7 +43,7 @@ public class jython_cli {
     private static final int FIX_NUMBER = 0;  
 
     private static final String textJythonApp = String.join(
-            System.lineSeparator(),
+            "\n",
             "",
             "import org.python.util.jython;",
             "",
@@ -62,7 +62,6 @@ public class jython_cli {
         String jythonVersion = DEFAULT_JYTHON_VERSION;
         String javaVersion = DEFAULT_JAVA_VERSION;
         String javaRuntimeOptions = "";
-        String ls = System.lineSeparator();
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
         TomlParseResult tpr = null;
@@ -102,7 +101,7 @@ public class jython_cli {
                         if (tomlText.length() == 0) {
                             tomlText.append(line.substring(2));
                         } else {
-                            tomlText.append(ls + line.substring(2));
+                            tomlText.append("\n" + line.substring(2));
                         }
                     }
                 }
@@ -171,13 +170,13 @@ public class jython_cli {
         // and is named <scriptname>_py.java
         // The Java helper program is deleted when the JVM exits.
         try (BufferedWriter jf = new BufferedWriter(new FileWriter(javaFilename))) {
-            jf.write("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?" + ls + ls);
+            jf.write("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?" + "\n" + "\n");
             for (String dependency : deps) {
-                jf.write("//DEPS " + dependency + ls);
+                jf.write("//DEPS " + dependency + "\n");
             }
-            jf.write("//JAVA " + javaVersion + ls);
+            jf.write("//JAVA " + javaVersion + "\n");
             if (javaRuntimeOptions.length() > 0) {
-                jf.write("//RUNTIME_OPTIONS " + javaRuntimeOptions + ls);
+                jf.write("//RUNTIME_OPTIONS " + javaRuntimeOptions + "\n");
             }
             String text = textJythonApp;
             String jtext = text.replace("__CLASSNAME__", javaClassname);
