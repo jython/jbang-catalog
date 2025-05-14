@@ -28,10 +28,9 @@ import org.tomlj.TomlParseResult;
 import org.tomlj.TomlTable;
 
 import org.python.util.jython;
+import org.python.Version;
 
 public class jython_cli {
-
-    private static String DEFAULT_JYTHON_VERSION = "2.7.4";
 
     // FIX_NUMBER appended to the Jython version forms the version of jython-cli as
     // [Jython version].[FIX_NUMBER], e.g. 2.7.4.0
@@ -40,7 +39,7 @@ public class jython_cli {
     // FIX_NUMBER is reset to 0 again, e.g. 2.7.5.0
     private static final int FIX_NUMBER = 0;
 
-    public static int getJvmMajorVersion() {
+    public static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
         String major = "";
         if (version.startsWith("1.")) {
@@ -53,7 +52,7 @@ public class jython_cli {
                 major = version;
             }
         }
-        return Integer.parseInt(major);
+        return major;
     }
 
     private static final String textJythonApp = String.join(
@@ -73,20 +72,18 @@ public class jython_cli {
 
     public static void main(String[] args) throws IOException {
         List<String> deps = new ArrayList<>();
-        String jythonVersion = DEFAULT_JYTHON_VERSION;
-        String javaVersion = "";
+        String jythonVersion = org.python.Version.PY_VERSION;
+        String javaVersion = getJvmMajorVersion();
         String javaRuntimeOptions = "";
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
         TomlParseResult tpr = null;
 
         // Check that that Java 8 (1.8) or higher is used
-        int javaMajorVersion = getJvmMajorVersion();
-        if (javaMajorVersion < 8) {
+        if (Integer.parseInt(javaVersion) < 8) {
             System.out.println("jython-cli: error, Java 8 or higher is required");
             System.exit(1);
         }
-        javaVersion = Integer.toString(javaMajorVersion);
 
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
