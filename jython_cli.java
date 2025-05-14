@@ -220,7 +220,7 @@ public class jython_cli {
         String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
         String[] jargs = params.toString().split("\\s+");
         try (Stream<String> ps = Jash.start("jbang" + ext, jargs).stream()) {
-                ps.forEach(System.out::println);
+            ps.forEach(System.out::println);
         }
     }
 }
