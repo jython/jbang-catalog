@@ -1,5 +1,5 @@
 #!/usr/bin/env jython-cli
 
-# restclient.py
+# simpletest.py
 
 print(1+2)
