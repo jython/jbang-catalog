@@ -3,7 +3,6 @@
 //DEPS dev.jbang:jash:0.0.3
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.python:jython-slim:2.7.4
-//JAVA 21
 
 // jython-cli can be run with Java 8 from the command-line as follows:
 //
@@ -32,15 +31,30 @@ import org.python.util.jython;
 
 public class jython_cli {
 
-    private static final String DEFAULT_JYTHON_VERSION = "2.7.4";
-    private static final String DEFAULT_JAVA_VERSION = "21";
+    private static String DEFAULT_JYTHON_VERSION = "2.7.4";
 
     // FIX_NUMBER appended to the Jython version forms the version of jython-cli as
     // [Jython version].[FIX_NUMBER], e.g. 2.7.4.0
     // Increment FIX_NUMBER with each new release of jython-cli.
     // If the version number of Jython changes (for example 2.7.4 becomes 2.7.5), then
     // FIX_NUMBER is reset to 0 again, e.g. 2.7.5.0
-    private static final int FIX_NUMBER = 0;  
+    private static final int FIX_NUMBER = 0;
+
+    public static int getJvmMajorVersion() {
+        String version = System.getProperty("java.version");
+        String major = "";
+        if (version.startsWith("1.")) {
+            major = version.substring(2, 3);
+        } else {
+            int dotIndex = version.indexOf(".");
+            if (dotIndex != -1) {
+                major = version.substring(0, dotIndex);
+            } else {
+                major = version;
+            }
+        }
+        return Integer.parseInt(major);
+    }
 
     private static final String textJythonApp = String.join(
             "\n",
@@ -60,11 +74,19 @@ public class jython_cli {
     public static void main(String[] args) throws IOException {
         List<String> deps = new ArrayList<>();
         String jythonVersion = DEFAULT_JYTHON_VERSION;
-        String javaVersion = DEFAULT_JAVA_VERSION;
+        String javaVersion = "";
         String javaRuntimeOptions = "";
         boolean debug = false;
         StringBuilder tomlText = new StringBuilder("");
         TomlParseResult tpr = null;
+
+        // Check that that Java 8 (1.8) or higher is used
+        int javaMajorVersion = getJvmMajorVersion();
+        if (javaMajorVersion < 8) {
+            System.out.println("jython-cli: error, Java 8 or higher is required");
+            System.exit(1);
+        }
+        javaVersion = Integer.toString(javaMajorVersion);
 
         // --version
         if (args.length == 1 && args[0].equals("--version")) {
