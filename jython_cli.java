@@ -85,9 +85,9 @@ public class jython_cli {
             System.exit(1);
         }
 
-        // --version
-        if (args.length == 1 && args[0].equals("--version")) {
-            System.out.println(jythonVersion + "." + FIX_NUMBER);
+        // --jython-cli-version
+        if (args.length == 1 && args[0].equals("--jython-cli-version")) {
+            System.out.println("jython-cli " + jythonVersion + "." + FIX_NUMBER);
             System.exit(0); 
         }
 
