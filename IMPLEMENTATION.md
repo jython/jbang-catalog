@@ -1,6 +1,6 @@
 # jython-cli
 
-Article [Running Jython scripts with JBang using a Java helper program](https://medium.com/@werner.fouche/running-jython-scripts-with-jbang-using-a-java-helper-program-9ab9f8e35ddc) describe how a **Jython.java** helper program is used to resolve the Maven dependencies of Jython script **banner.py**.
+Article [Running Jython scripts with JBang using a Java helper program](https://medium.com/@werner.fouche/running-jython-scripts-with-jbang-using-a-java-helper-program-9ab9f8e35ddc) describes how a **Jython.java** helper program is used to resolve the Maven dependencies of Jython script **banner.py**.
 
 **Jython.java**
 
@@ -58,9 +58,9 @@ $ jbang run Jython.java banner.py
         |___/
 ```
 
-The purpose of the `jython-cli` program is to generate a Jython.java type program from dependency information (metadata) added to a Jython script.
+The purpose of the `jython-cli` program is to generate, compile and run a Jython.java type program from dependency information (metadata) added to a Jython script.
 
-## PEP-723 (Inline Script Metadata)
+## Inline Script Metadata
 
 We took inspiration from [PEP-723](https://peps.python.org/pep-0723/) and adopted its metadata format (TOML) to specify:
 
