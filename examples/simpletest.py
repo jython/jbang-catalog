@@ -3,8 +3,7 @@
 # simpletest.py
 
 # /// jbang
-# [jython-cli]
-#   debug = true
+# debug = true
 # ///
 
 print(1+2)

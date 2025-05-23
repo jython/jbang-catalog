@@ -8,10 +8,7 @@
 # dependencies = [
 #   "ch.aplu.turtle:aplu5:0.1.9"
 # ]
-# [java]
-#   runtime-options = ""
-# [jython-cli]
-#   debug = false
+# debug = false
 # ///
 
 # ------------------------------------------

@@ -8,10 +8,14 @@
 # dependencies = [
 #   "io.undertow:undertow-core:2.3.18.Final"
 # ]
-# [java]
-#   runtime-options = "-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
-# [jython-cli]
-#   debug = false
+# runtime-options = [
+#   "-Dpython.console.encoding=UTF-8",
+#   "-server",
+#   "-Xmx2g",
+#   "-XX:+UseZGC",
+#   "-XX:+ZGenerational"
+# ]
+# debug = false
 # ///
 
 import io.undertow.Undertow as Undertow

@@ -6,12 +6,12 @@
 # requires-jython = "2.7.4"
 # requires-java = "21"
 # dependencies = [
-#   "io.leego:banana:2.1.0",
+#   "io.leego:banana:2.1.0"
 # ]
-# [java]
-#   runtime-options = ""
-# [jython-cli]
-#   debug = false
+# runtime-options = [
+#   "-Dpython.console.encoding=UTF-8"
+# ]
+# debug = false
 # ///
 
 import sys
