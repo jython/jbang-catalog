@@ -17,10 +17,9 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import org.python.Version;
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
-
-import org.python.Version;
 
 public class JythonCli {
 
