@@ -1,9 +1,7 @@
 # jython-cli
 
-While Jython scripts with Maven dependencies can be executed using only JBang, 
-this method is often cumbersome for users. The `jython-cli` script simplifies this 
-process by handling these actions in the background, shielding users from the
-underlying complexity.
+Although Jython scripts with optional Maven dependencies can be executed using only JBang, 
+this method is cumbersome for users. 
 
 ```python
 # banner.py
@@ -41,7 +39,9 @@ $ jbang run --java 21 \
         |___/
 ```
 
-Optional metadata in the Jython script provide information to `jython-cli` to enable corresponding options in JBang.
+The `jython-cli` script simplifies this
+process by handling these actions in the background, shielding users from the
+underlying complexity. Optional metadata in the Jython script provide information to `jython-cli` to enable corresponding options in JBang.
 
 ## Inline Script Metadata
 
@@ -54,7 +54,7 @@ We took inspiration from [PEP-723](https://peps.python.org/pep-0723/) and adopte
 
 The metadata information starts with `# /// jbang` and ends with `# ///`. Each line in between these two markers are stripped of the first two characters, and the rest of the line is assumed to be valid TOML data.
 
-**banner2.py**
+*banner.py*
 
 ```python
 #!/usr/bin/env jython-cli
@@ -85,7 +85,7 @@ def main():
 main()
 ```
 
-**TOML data extracted from banner2.py**
+*TOML data extracted from banner.py*
 
 ```toml
 requires-jython = "2.7.4"
