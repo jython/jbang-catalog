@@ -155,7 +155,7 @@ public class JythonCli {
     Collections.addAll(cmd, args);
 
     if (debug) {
-      System.out.println("[jython-cli] " + cmd.toString());
+      System.err.println("[jython-cli] " + cmd.toString());
     }
 
     // Execute the JBang command
