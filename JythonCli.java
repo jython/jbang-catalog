@@ -76,14 +76,12 @@ public class JythonCli {
         if (!found && line.startsWith("# /// jbang")) {
           found = true;
         } else if (found && line.startsWith("# ///")) {
-          found = false;
           break;
         } else if (found && line.startsWith("# ")) {
-            if (tomlText.length() == 0) {
-                tomlText.append(line.substring(2));
-            } else {
-                tomlText.append("\n").append(line.substring(2));
-            }
+          if (tomlText.length() > 0) {
+            tomlText.append("\n");
+          }
+          tomlText.append(line.substring(2));
         }
       }
     }
