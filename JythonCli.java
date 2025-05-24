@@ -79,7 +79,7 @@ public class JythonCli {
           found = false;
           break;
         } else if (found && line.startsWith("# ")) {
-            if (tomlText.isEmpty()) {
+            if (tomlText.length() == 0) {
                 tomlText.append(line.substring(2));
             } else {
                 tomlText.append("\n").append(line.substring(2));
@@ -89,7 +89,7 @@ public class JythonCli {
     }
 
     // Parse the TOML data
-    if (!tomlText.isEmpty()) {
+    if (tomlText.length() > 0) {
       tpr = Toml.parse(tomlText.toString());
     }
 
