@@ -71,7 +71,7 @@ public class JythonCli {
       for (String line : lines) {
         if (found && !line.startsWith("# ")) {
           found = false;
-          tomlText = new StringBuilder("");
+          tomlText = new StringBuilder();
         }
         if (!found && line.startsWith("# /// jbang")) {
           found = true;
