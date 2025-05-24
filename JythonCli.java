@@ -153,9 +153,8 @@ public class JythonCli {
         cmd.add("org.python.util.jython");
         cmd.add("org.python:jython-standalone:" + jythonVersion);
 
-        for (String arg: args) {
-            cmd.add(arg);
-        }
+        Collections.addAll(cmd, args);
+
         if (debug) {
             System.out.println("[jython-cli] " + cmd.toString());
         }
