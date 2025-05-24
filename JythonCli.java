@@ -28,7 +28,7 @@ public class JythonCli {
     String jythonVersion = Version.PY_VERSION;
     String javaVersion = getJvmMajorVersion();
     boolean debug = false;
-    StringBuilder tomlText = new StringBuilder("");
+    StringBuilder tomlText = new StringBuilder();
     TomlParseResult tpr = null;
 
     static final String getJvmMajorVersion() {
