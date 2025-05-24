@@ -132,29 +132,36 @@ public class JythonCli {
 
     void runProcess(String[] args) throws IOException, InterruptedException {
         // Construct the JBang command to be executed
-        String cmd = "jbang";
+        List<String> cmd = new LinkedList<>();
         String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
-        cmd = cmd + ext;
-        StringBuilder params = new StringBuilder("run");
-        params.append(" --java " + javaVersion);
+        cmd.add("jbang" + ext);
+
+        cmd.add("run");
+
+        cmd.add("--java");
+        cmd.add(javaVersion);
+
         for (String ropt: ropts) {
-            params.append(" --runtime-option " + ropt);
+            cmd.add("--runtime-option");
+            cmd.add(ropt);
         }
         for (String dep: deps) {
-            params.append(" --deps " + dep);
+            cmd.add("--deps");
+            cmd.add(dep);
         }
-        params.append(" --main org.python.util.jython");
-        params.append(" org.python:jython-standalone:" + jythonVersion);
+        cmd.add("--main");
+        cmd.add("org.python.util.jython");
+        cmd.add("org.python:jython-standalone:" + jythonVersion);
+
         for (String arg: args) {
-            params.append(" " + arg);
+            cmd.add(arg);
         }
-        cmd = cmd + " " + params.toString();
         if (debug) {
-            System.out.println("[jython-cli] " + cmd);
+            System.out.println("[jython-cli] " + cmd.toString());
         }
         
         // Execute the JBang command
-        ProcessBuilder pb = new ProcessBuilder(cmd.split("\\s+"));
+        ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.inheritIO();
         pb.start().waitFor();
     }
