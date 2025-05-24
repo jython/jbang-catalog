@@ -31,16 +31,17 @@ provided that the first line of the script contains text:
 
 `#!/usr/bin/env jython-cli`
 
-## PEP-723
+## Metadata
 
 `jython-cli` uses the `PEP-723` inline script metadata format to specify:
 
 * The version of Jython to use: 2.7.1, ...
-* The major version of Java to use: 17, 21, ...
+* The major version of Java  use: 17, 21, ...
 * Maven dependencies to make available to the Jython script
 * Additional Java runtime options to use
 
-[Jython metadata for JBang]
+*Jython metadata for JBang*
+
 ```
 # /// jbang
 # requires-jython = "2.7.4"
@@ -48,12 +49,16 @@ provided that the first line of the script contains text:
 # dependencies = [
 #   "io.leego:banana:2.1.0"
 # ]
-# [java]
-#   runtime-options = "-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
+# runtime-options = [
+#   "-server",
+#   "-Xmx2g",
+#   "-XX:+UseZGC",
+#   "-XX:+ZGenerational"
+# ]
 # ///
 ```
 
-[Jython script banner.py with metadata for JBang]
+*Jython script banner.py with metadata for JBang*
 
 ```python
 #!/usr/bin/env jython-cli
@@ -64,10 +69,14 @@ provided that the first line of the script contains text:
 # requires-jython = "2.7.4"
 # requires-java = "21"
 # dependencies = [
-#   "io.leego:banana:2.1.0",
+#   "io.leego:banana:2.1.0"
 # ]
-# [java]
-#   runtime-options = ""
+# runtime-options = [
+#   "-server",
+#   "-Xmx2g",
+#   "-XX:+UseZGC",
+#   "-XX:+ZGenerational"
+# ]
 # ///
 
 import sys
@@ -93,7 +102,7 @@ jbang run jython-cli@jython --version
 ```
 
 ```
-2.7.4.0
+Jython 2.7.4
 ```
 
 ## Example 2 - run Jython scripts passed in as a string
