@@ -189,13 +189,21 @@ jbang run jython-cli@jython turtle.py
 
 If the `jython_cli.java` program is modified and needs to be tested (before changes
 are submitted to the repo), the example scripts can be used as tests and run 
-locally:
+locally (using Java 21):
 
 * jbang run jython-cli examples/banner.py
 * jbang run jython-cli examples/restclient.py
 * jbang run jython-cli examples/httpserver.py
 * jbang run jython-cli examples/turtle.py
 * jbang run jython-cli examples/simpletest.py
+
+Also test the jython-cli script with Java 8:
+
+* jbang run --java 8 jython-cli examples/banner.py
+* jbang run --java 8 jython-cli examples/restclient.py
+* jbang run --java 8 jython-cli examples/httpserver.py
+* jbang run --java 8 jython-cli examples/turtle.py
+* jbang run --java 8 jython-cli examples/simpletest.py
 
 ## Articles about Jython and JBang
 
