@@ -3,17 +3,6 @@
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.python:jython-slim:2.7.4
 
-// jython-cli can be run with Java 8 from the command-line as follows:
-//
-// $ jbang --java 8 jython-cli
-//
-// [jbang] Building jar for JythonCli.java...
-//        Jython 2.7.4 (tags/v2.7.4:3f256f4a7, Aug 18 2024, 16:49:39)
-//        [OpenJDK 64-Bit Server VM (Temurin)] on java1.8.0_452
-//        Type "help", "copyright", "credits" or "license" for more information.
-//        >>>
-//
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -48,10 +37,9 @@ public class JythonCli {
   }
 
   void initEnvironment(String[] args) throws IOException {
-
     // Check that that Java 8 (1.8) or higher is used
     if (Integer.parseInt(javaVersion) < 8) {
-      System.out.println("jython-cli: error, Java 8 or higher is required");
+      System.err.println("jython-cli: error, Java 8 or higher is required");
       System.exit(1);
     }
 
@@ -148,7 +136,7 @@ public class JythonCli {
     cmd.add("--main");
     cmd.add("org.python.util.jython");
 
-    cmd.add("org.python:jython-standalone:" + jythonVersion);
+    cmd.add("org.python:jython-slim:" + jythonVersion);
 
     Collections.addAll(cmd, args);
 

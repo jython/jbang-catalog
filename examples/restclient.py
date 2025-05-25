@@ -7,7 +7,7 @@
 # requires-java = "21"
 # dependencies = [
 #   "io.leego:banana:2.1.0",
-#   "org.springframework.boot:spring-boot-starter-web:3.4.5"
+#   "org.springframework.boot:spring-boot-starter-web:3.4.6"
 # ]
 # runtime-options = [
 #   "-Dpython.console.encoding=UTF-8",
