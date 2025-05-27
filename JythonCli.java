@@ -10,14 +10,28 @@ import org.tomlj.TomlParseResult;
 
 public class JythonCli {
 
-    List<String> deps = new ArrayList<>();
-    List<String> ropts = new ArrayList<>();
+    /** Default version of Jython to use. */
     String jythonVersion = "2.7.4";
+    /** Default version of Java to use as determined by the JVM version running {@code jython-cli}.
+     * Only Java 8 or higher is supported. */
     String javaVersion = getJvmMajorVersion();
-    boolean debug = false;
+    /** List of Maven Central JAR dependencies */
+    List<String> deps = new ArrayList<>();
+    /** Java VM runtime options */
+    List<String> ropts = new ArrayList<>();
+    /** (optional) TOML text block extracted from the Jython script specified on the command-line */
     StringBuilder tomlText = new StringBuilder();
+    /** (optional) TOML parsed result object from which runtime information is extracted */
     TomlParseResult tpr = null;
+    /** Debug flag that can be specified in the TOML configuration as {@code debug = true} or {@code debug = false}.
+     * If set to true then at runtime the arguments passed to ProcessBuilder is displayed before the Jython process
+     * is started. */
+    boolean debug = false;
 
+    /**
+     * Determine the major version number of the JVM {@code jython-cli} is running on.
+     * @return the major version number of the current JVM, that is "8", "9", "10", etc.
+     */
     static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
         String major = "";
@@ -34,6 +48,13 @@ public class JythonCli {
         return major;
     }
 
+    /**
+     * Extract additional runtime options from the (optional) Jython script specified on the command-line
+     * contained (optional) TOML data. The runtime options that are extracted from the TOML data will override default
+     * version specifications determined earlier.
+     * @param args program arguments as specified on the command-line
+     * @throws IOException
+     */
     void initEnvironment(String[] args) throws IOException {
         // Check that that Java 8 (1.8) or higher is used
         if (Integer.parseInt(javaVersion) < 8) {
@@ -109,8 +130,13 @@ public class JythonCli {
         }
     }
 
+    /**
+     * Run the Jython jar using JBang passing along the required Maven dependencies and JVM runtime options.
+     * @param args program arguments as specified on the command-line
+     * @throws IOException
+     * @throws InterruptedException
+     */
     void runProcess(String[] args) throws IOException, InterruptedException {
-        // Construct the JBang command to be executed
         List<String> cmd = new LinkedList<>();
 
         String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
@@ -142,12 +168,19 @@ public class JythonCli {
             System.err.println("[jython-cli] " + cmd.toString());
         }
 
-        // Execute the JBang command
         ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.inheritIO();
         pb.start().waitFor();
     }
 
+    /**
+     * Main {@code jython-cli} (JythonCli.java) program.
+     *
+     * @param args arguments to the program. The arguments are exactly the same command-line arguments
+     *             Jython itself supports as documented in <a href="https://www.jython.org/jython-old-sites/docs/using/cmdline.html">Jython Command Line</a>
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws IOException, InterruptedException {
         JythonCli jythonCli = new JythonCli();
         jythonCli.initEnvironment(args);
