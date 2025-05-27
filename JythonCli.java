@@ -1,12 +1,10 @@
-/// usr/bin/env jbang "$0" "$@" ; exit $?
+///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS org.tomlj:tomlj:1.1.1
-//DEPS org.python:jython-slim:2.7.4
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import org.python.Version;
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
@@ -14,7 +12,7 @@ public class JythonCli {
 
   List<String> deps = new ArrayList<>();
   List<String> ropts = new ArrayList<>();
-  String jythonVersion = Version.PY_VERSION;
+  String jythonVersion = "2.7.4";
   String javaVersion = getJvmMajorVersion();
   boolean debug = false;
   StringBuilder tomlText = new StringBuilder();
