@@ -50,7 +50,7 @@ public class JythonCli {
 
     /**
      * Extract additional runtime options from the (optional) Jython script specified on the command-line
-     * contained (optional) TOML data. The runtime options that are extracted from the TOML data will override default
+     * containing (optional) TOML data. The runtime options that are extracted from the TOML data will override default
      * version specifications determined earlier.
      * @param args program arguments as specified on the command-line
      * @throws IOException
