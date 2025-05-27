@@ -207,8 +207,8 @@ Also test the jython-cli script with Java 8:
 
 On Linux or MacOS the JythonCli.java script can be run directly for testing purposes:
 
-$ ./JythonCli.java -V
-$ ./JythonCli.java examples/banner.py
+* ./JythonCli.java -V
+* ./JythonCli.java examples/banner.py
 
 ## Articles about Jython and JBang
 
