@@ -86,7 +86,11 @@ public class JythonCli {
                     String jbangComment = matcher.group("content");
                     List<String> tomlLines = new ArrayList<>();
                     for (String line : jbangComment.split("\n")) {
-                        tomlLines.add(line.substring(2));
+                        if (line.startsWith("# ")) {
+                            tomlLines.add(line.substring(2));
+                        } else {
+                            tomlLines.add(line.substring(1));
+                        }
                     }
                     tomlText = String.join("\n", tomlLines);
                 }
