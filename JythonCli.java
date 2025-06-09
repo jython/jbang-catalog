@@ -7,6 +7,8 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
@@ -75,8 +77,9 @@ public class JythonCli {
 
         // Extract TOML data as a String (if present)
         if (!scriptFilename.isEmpty()) {
-            List<String> fileLines = Files.readAllLines(Paths.get(scriptFilename));
-            String fileText = String.join("\n", fileLines);
+            String fileText = Files.readAllLines(Paths.get(scriptFilename))
+                    .stream()
+                    .collect(Collectors.joining("\n"));
             String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
             Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
             Matcher matcher = pattern.matcher(fileText);
