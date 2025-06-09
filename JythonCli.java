@@ -62,7 +62,7 @@ public class JythonCli {
     void initEnvironment(String[] args) throws IOException {
         // Check that that Java 8 (1.8) or higher is used
         if (Integer.parseInt(javaVersion) < 8) {
-            System.err.println("jython-cli: error, Java 8 or higher is required");
+            System.err.println("[jython-cli] error - Java 8 or higher is required");
             System.exit(1);
         }
 
@@ -88,6 +88,7 @@ public class JythonCli {
                 if (type.equals("jbang")) {
                     if (!tomlText.isEmpty()) {
                         tomlText = "";
+                        System.err.println("[jython-cli] error - multiple jbang content blocks detected");
                         break;
                     }
                     String jbangComment = matcher.group("content");
