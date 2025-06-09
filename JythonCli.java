@@ -5,6 +5,8 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
@@ -20,7 +22,7 @@ public class JythonCli {
     /** Java VM runtime options */
     List<String> ropts = new ArrayList<>();
     /** (optional) TOML text block extracted from the Jython script specified on the command-line */
-    StringBuilder tomlText = new StringBuilder();
+    String tomlText = "";
     /** (optional) TOML parsed result object from which runtime information is extracted */
     TomlParseResult tpr = null;
     /** Debug flag that can be specified in the TOML configuration as {@code debug = true} or {@code debug = false}.
@@ -73,29 +75,27 @@ public class JythonCli {
 
         // Extract TOML data as a String (if present)
         if (!scriptFilename.isEmpty()) {
-            List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-            boolean found = false;
-            for (String line : lines) {
-                if (found && !line.startsWith("# ")) {
-                    found = false;
-                    tomlText = new StringBuilder();
-                }
-                if (!found && line.startsWith("# /// jbang")) {
-                    found = true;
-                } else if (found && line.startsWith("# ///")) {
-                    break;
-                } else if (found && line.startsWith("# ")) {
-                    if (tomlText.length() > 0) {
-                        tomlText.append("\n");
+            List<String> fileLines = Files.readAllLines(Paths.get(scriptFilename));
+            String fileText = String.join("\n", fileLines);
+            String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
+            Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
+            Matcher matcher = pattern.matcher(fileText);
+            if (matcher.find()) {
+                String type = matcher.group("type");
+                if (type.equals("jbang")) {
+                    String jbangComment = matcher.group("content");
+                    List<String> tomlLines = new ArrayList<>();
+                    for (String line : jbangComment.split("\n")) {
+                        tomlLines.add(line.substring(2));
                     }
-                    tomlText.append(line.substring(2));
+                    tomlText = String.join("\n", tomlLines);
                 }
             }
         }
 
         // Parse the TOML data
-        if (tomlText.length() > 0) {
-            tpr = Toml.parse(tomlText.toString());
+        if (!tomlText.isEmpty()) {
+            tpr = Toml.parse(tomlText);
         }
 
         // Process the TOML data
