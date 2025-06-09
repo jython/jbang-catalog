@@ -80,7 +80,7 @@ public class JythonCli {
             String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
             Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
             Matcher matcher = pattern.matcher(fileText);
-            if (matcher.find()) {
+            while (matcher.find()) {
                 String type = matcher.group("type");
                 if (type.equals("jbang")) {
                     String jbangComment = matcher.group("content");
@@ -93,6 +93,7 @@ public class JythonCli {
                         }
                     }
                     tomlText = String.join("\n", tomlLines);
+                    break;
                 }
             }
         }
