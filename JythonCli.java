@@ -83,6 +83,10 @@ public class JythonCli {
             while (matcher.find()) {
                 String type = matcher.group("type");
                 if (type.equals("jbang")) {
+                    if (!tomlText.isEmpty()) {
+                        tomlText = "";
+                        break;
+                    }
                     String jbangComment = matcher.group("content");
                     List<String> tomlLines = new ArrayList<>();
                     for (String line : jbangComment.split("\n")) {
@@ -93,7 +97,6 @@ public class JythonCli {
                         }
                     }
                     tomlText = String.join("\n", tomlLines);
-                    break;
                 }
             }
         }
