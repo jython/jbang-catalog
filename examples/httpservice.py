@@ -15,6 +15,7 @@
 #   "-XX:+UseZGC",
 #   "-XX:+ZGenerational"
 # ]
+# debug = false
 # ///
 
 import io.undertow.Undertow as Undertow

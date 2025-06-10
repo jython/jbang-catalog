@@ -11,6 +11,7 @@
 # runtime-options = [
 #   "-Dpython.console.encoding=UTF-8"
 # ]
+# debug = false
 # ///
 
 import sys
