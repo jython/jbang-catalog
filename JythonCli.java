@@ -103,6 +103,11 @@ public class JythonCli {
                     tomlText = String.join("\n", tomlLines);
                 }
             }
+            if (tomlText.isEmpty()) {
+                if (fileText.contains("# /// jbang")) {
+                    System.err.println("[jython-cli] error - malformed jbang content discarded");
+                }
+            }
         }
 
         // Parse the TOML data
