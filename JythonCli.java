@@ -23,7 +23,9 @@ public class JythonCli {
     StringBuilder tomlText = new StringBuilder();
     /** (optional) TOML parsed result object from which runtime information is extracted */
     TomlParseResult tpr = null;
-    /** Internal debug flag to be used during development  */
+    /** Debug flag that can be specified in the TOML configuration as {@code debug = true} or {@code debug = false}.
+     * If set to true then at runtime the arguments passed to ProcessBuilder is displayed before the Jython process
+     * is started. */
     boolean debug = false;
 
     /**
@@ -119,6 +121,11 @@ public class JythonCli {
             for (Object e : tpr.getArrayOrEmpty("runtime-options").toList()) {
                 String ropt = (String) e;
                 ropts.add(ropt);
+            }
+
+            // debug
+            if (tpr.isBoolean("debug")) {
+                debug = Boolean.TRUE.equals(tpr.getBoolean("debug"));
             }
         }
     }
