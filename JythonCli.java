@@ -110,6 +110,7 @@ public class JythonCli {
                     System.err.println("[jython-cli] error - malformed jbang content block discarded");
                     boolean found = false;
                     for (String line : fileText.split("\n")) {
+                        line = line.strip();
                         if (line.equals("# /// jbang")) {
                             System.err.println(line);
                             found = true;
