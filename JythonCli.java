@@ -77,6 +77,7 @@ public class JythonCli {
 
         // Extract TOML data as a String (if present)
         if (!scriptFilename.isEmpty()) {
+            boolean errorReportingEnabled = true;
             String fileText = Files.readAllLines(Paths.get(scriptFilename))
                     .stream()
                     .collect(Collectors.joining("\n"));
@@ -88,7 +89,8 @@ public class JythonCli {
                 if (type.equals("jbang")) {
                     if (!tomlText.isEmpty()) {
                         tomlText = "";
-                        System.err.println("[jython-cli] error - multiple jbang content blocks detected");
+                        errorReportingEnabled = false;
+                        System.err.println("[jython-cli] error - multiple jbang content blocks detected and discarded");
                         break;
                     }
                     String jbangComment = matcher.group("content");
@@ -103,9 +105,24 @@ public class JythonCli {
                     tomlText = String.join("\n", tomlLines);
                 }
             }
-            if (tomlText.isEmpty()) {
+            if (tomlText.isEmpty() && errorReportingEnabled) {
                 if (fileText.contains("# /// jbang")) {
-                    System.err.println("[jython-cli] error - malformed jbang content discarded");
+                    System.err.println("[jython-cli] error - malformed jbang content block discarded");
+                    boolean found = false;
+                    for (String line : fileText.split("\n")) {
+                        if (line.equals("# /// jbang")) {
+                            System.err.println(line);
+                            found = true;
+                            continue;
+                        }
+                        if (found) {
+                            if (line.startsWith("#")) {
+                                System.err.println(line);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
