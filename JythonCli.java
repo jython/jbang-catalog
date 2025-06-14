@@ -1,3 +1,4 @@
+
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS org.tomlj:tomlj:1.1.1
@@ -10,27 +11,47 @@ import org.tomlj.TomlParseResult;
 
 public class JythonCli {
 
-    /** Default version of Jython to use. */
+    /**
+     * Default version of Jython to use.
+     */
     String jythonVersion = "2.7.4";
-    /** Default version of Java to use as determined by the JVM version running {@code jython-cli}.
-     * Only Java 8 or higher is supported. */
+    /**
+     * Default version of Java to use as determined by the JVM version running
+     * {@code jython-cli}. Only Java 8 or higher is supported.
+     */
     String javaVersion = getJvmMajorVersion();
-    /** List of Maven Central JAR dependencies */
+    /**
+     * List of Maven Central JAR dependencies
+     */
     List<String> deps = new ArrayList<>();
-    /** Java VM runtime options */
+    /**
+     * Java VM runtime options
+     */
     List<String> ropts = new ArrayList<>();
-    /** (optional) TOML text block extracted from the Jython script specified on the command-line */
+    /**
+     * (optional) TOML text block extracted from the Jython script specified on
+     * the command-line
+     */
     StringBuilder tomlText = new StringBuilder();
-    /** (optional) TOML parsed result object from which runtime information is extracted */
+    /**
+     * (optional) TOML parsed result object from which runtime information is
+     * extracted
+     */
     TomlParseResult tpr = null;
-    /** Debug flag that can be specified in the TOML configuration as {@code debug = true} or {@code debug = false}.
-     * If set to true then at runtime the arguments passed to ProcessBuilder is displayed before the Jython process
-     * is started. */
+    /**
+     * Debug flag that can be specified in the TOML configuration as
+     * {@code debug = true} or {@code debug = false}. If set to true then at
+     * runtime the arguments passed to ProcessBuilder is displayed before the
+     * Jython process is started.
+     */
     boolean debug = false;
 
     /**
-     * Determine the major version number of the JVM {@code jython-cli} is running on.
-     * @return the major version number of the current JVM, that is "8", "9", "10", etc.
+     * Determine the major version number of the JVM {@code jython-cli} is
+     * running on.
+     *
+     * @return the major version number of the current JVM, that is "8", "9",
+     * "10", etc.
      */
     static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
@@ -49,9 +70,11 @@ public class JythonCli {
     }
 
     /**
-     * Extract additional runtime options from the (optional) Jython script specified on the command-line
-     * containing (optional) TOML data. The runtime options that are extracted from the TOML data will override default
-     * version specifications determined earlier.
+     * Extract additional runtime options from the (optional) Jython script
+     * specified on the command-line containing (optional) TOML data. The
+     * runtime options that are extracted from the TOML data will override
+     * default version specifications determined earlier.
+     *
      * @param args program arguments as specified on the command-line
      * @throws IOException
      */
@@ -131,16 +154,17 @@ public class JythonCli {
     }
 
     /**
-     * Run the Jython jar using JBang passing along the required Maven dependencies and JVM runtime options.
+     * Run the Jython jar using JBang passing along the required Maven
+     * dependencies and JVM runtime options.
+     *
      * @param args program arguments as specified on the command-line
      * @throws IOException
      * @throws InterruptedException
      */
     void runProcess(String[] args) throws IOException, InterruptedException {
         List<String> cmd = new LinkedList<>();
-
-        String ext = System.getProperty("os.name").toLowerCase().startsWith("win") ? ".cmd" : "";
-        cmd.add("jbang" + ext);
+        boolean windows = System.getProperty("os.name").toLowerCase().startsWith("win");
+        cmd.add("jbang" + (windows ? ".cmd" : ""));
 
         cmd.add("run");
 
@@ -174,10 +198,12 @@ public class JythonCli {
     }
 
     /**
-     * Main {@code jython-cli} (JythonCli.java) program.
+     * Main {@code jython-cli} (JythonCli.java) program. The arguments are exactly the same
+     * command-line arguments Jython itself supports as documented in
+     * <a href="https://www.jython.org/jython-old-sites/docs/using/cmdline.html">Jython
+     * Command Line</a>
      *
-     * @param args arguments to the program. The arguments are exactly the same command-line arguments
-     *             Jython itself supports as documented in <a href="https://www.jython.org/jython-old-sites/docs/using/cmdline.html">Jython Command Line</a>
+     * @param args arguments to the program. 
      * @throws IOException
      * @throws InterruptedException
      */
