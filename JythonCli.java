@@ -107,8 +107,7 @@ public class JythonCli {
             }
             if (tomlText.isEmpty() && errorReportingEnabled) {
                 if (fileText.contains("# /// jbang")) {
-                    System.err.println("[jython-cli] error - malformed jbang content block discarded");
-                    System.err.println("[jython-cli]");
+                    System.err.println("[jython-cli] error - malformed jbang content block detected");
                     boolean found = false;
                     for (String line : fileText.split("\n")) {
                         line = line.strip();
@@ -125,7 +124,7 @@ public class JythonCli {
                             }
                         }
                     }
-                    System.err.println("[jython-cli]");
+                    System.exit(1);
                 }
             }
         }
