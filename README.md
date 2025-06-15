@@ -95,6 +95,37 @@ def main():
 main()
 ```
 
+Use the option `--cli-debug` to display
+the `jbang` metadata read from the script,
+and what it has been decoded into (as JSON).
+```
+PS jython-jbang-catalog> jbang jython-cli --cli-debug examples\banner.py
+     5 :# /// jbang
+     6 :# requires-jython = "2.7.4"
+     7 :# requires-java = "21"
+     8 :# dependencies = [
+     9 :#   "io.leego:banana:2.1.0"
+    10 :# ]
+    11 :# runtime-options = [
+    12 :#   "-Dpython.console.encoding=UTF-8"
+    13 :# ]
+    14 :# ///
+{
+  "requires-jython" : "2.7.4",
+  "requires-java" : "21",
+  "dependencies" : [
+    "io.leego:banana:2.1.0"
+  ],
+  "runtime-options" : [
+    "-Dpython.console.encoding=UTF-8"
+  ],
+}
+
+[jbang.cmd, run, --java, 21, --runtime-option, -Dpython.console.encoding=UTF-8, --deps, io.leego:banana:2.1.0, --main, org.python.util.jython, org.python:jython-slim:2.7.4, examples\banner.py]
+...
+```
+
+
 ## Example 1 - run Jython and display its version number
 
 ```bash
@@ -184,6 +215,9 @@ jbang run jython-cli@jython turtle.py
 ```
 
 ![Alt text](images/turtle.png)
+
+
+
 
 ## Development testing
 
