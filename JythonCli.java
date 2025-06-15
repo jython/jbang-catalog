@@ -5,6 +5,10 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
@@ -20,7 +24,7 @@ public class JythonCli {
     /** Java VM runtime options */
     List<String> ropts = new ArrayList<>();
     /** (optional) TOML text block extracted from the Jython script specified on the command-line */
-    StringBuilder tomlText = new StringBuilder();
+    String tomlText = "";
     /** (optional) TOML parsed result object from which runtime information is extracted */
     TomlParseResult tpr = null;
     /** Debug flag that can be specified in the TOML configuration as {@code debug = true} or {@code debug = false}.
@@ -58,7 +62,7 @@ public class JythonCli {
     void initEnvironment(String[] args) throws IOException {
         // Check that that Java 8 (1.8) or higher is used
         if (Integer.parseInt(javaVersion) < 8) {
-            System.err.println("jython-cli: error, Java 8 or higher is required");
+            System.err.println("[jython-cli] error - Java 8 or higher is required");
             System.exit(1);
         }
 
@@ -73,29 +77,61 @@ public class JythonCli {
 
         // Extract TOML data as a String (if present)
         if (!scriptFilename.isEmpty()) {
-            List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-            boolean found = false;
-            for (String line : lines) {
-                if (found && !line.startsWith("# ")) {
-                    found = false;
-                    tomlText = new StringBuilder();
-                }
-                if (!found && line.startsWith("# /// jbang")) {
-                    found = true;
-                } else if (found && line.startsWith("# ///")) {
-                    break;
-                } else if (found && line.startsWith("# ")) {
-                    if (tomlText.length() > 0) {
-                        tomlText.append("\n");
+            boolean errorReportingEnabled = true;
+            String fileText = Files.readAllLines(Paths.get(scriptFilename))
+                    .stream()
+                    .collect(Collectors.joining("\n"));
+            String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
+            Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
+            Matcher matcher = pattern.matcher(fileText);
+            while (matcher.find()) {
+                String type = matcher.group("type");
+                if (type.equals("jbang")) {
+                    if (!tomlText.isEmpty()) {
+                        tomlText = "";
+                        errorReportingEnabled = false;
+                        System.err.println("[jython-cli] error - multiple jbang content blocks detected and discarded");
+                        break;
                     }
-                    tomlText.append(line.substring(2));
+                    String jbangComment = matcher.group("content");
+                    List<String> tomlLines = new ArrayList<>();
+                    for (String line : jbangComment.split("\n")) {
+                        if (line.startsWith("# ")) {
+                            tomlLines.add(line.substring(2));
+                        } else {
+                            tomlLines.add(line.substring(1));
+                        }
+                    }
+                    tomlText = String.join("\n", tomlLines);
+                }
+            }
+            if (tomlText.isEmpty() && errorReportingEnabled) {
+                if (fileText.contains("# /// jbang")) {
+                    System.err.println("[jython-cli] error - malformed jbang content block detected");
+                    boolean found = false;
+                    for (String line : fileText.split("\n")) {
+                        line = line.strip();
+                        if (line.equals("# /// jbang")) {
+                            System.err.println(line);
+                            found = true;
+                            continue;
+                        }
+                        if (found) {
+                            if (line.startsWith("#")) {
+                                System.err.println(line);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    System.exit(1);
                 }
             }
         }
 
         // Parse the TOML data
-        if (tomlText.length() > 0) {
-            tpr = Toml.parse(tomlText.toString());
+        if (!tomlText.isEmpty()) {
+            tpr = Toml.parse(tomlText);
         }
 
         // Process the TOML data
