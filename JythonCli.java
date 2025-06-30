@@ -1,4 +1,3 @@
-
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS org.tomlj:tomlj:1.1.1
@@ -246,7 +245,7 @@ public class JythonCli {
      */
     void printIfDebug(String text) {
         if (debug) {
-            System.err.printf(text);
+            System.err.println(text);
         }
     }
 
