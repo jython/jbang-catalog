@@ -91,9 +91,8 @@ public class JythonCli {
             System.exit(1);
         }
 
-        scriptFilename = "";
         for (String arg : args) {
-            if (scriptFilename.isEmpty() && arg.endsWith(".py")) {
+            if (scriptFilename==null && arg.endsWith(".py")) {
                 scriptFilename = arg;
                 jythonArgs.add(arg);
             } else if ("--cli-debug".equals(arg)) {
