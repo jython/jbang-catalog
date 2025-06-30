@@ -95,7 +95,6 @@ public class JythonCli {
             if (arg.endsWith(".py")) {
                 scriptFilename = arg;
                 jythonArgs.add(arg);
-                break;
             } else if ("--cli-debug".equals(arg)) {
                 debug = true;
             } else {
