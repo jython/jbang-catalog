@@ -8,7 +8,6 @@
 # dependencies = [
 #   "ch.aplu.turtle:aplu5:0.1.9"
 # ]
-# debug = false
 # ///
 
 # ------------------------------------------

@@ -16,7 +16,6 @@
 #   "-XX:+UseZGC",
 #   "-XX:+ZGenerational"
 # ]
-# debug = false
 # ///
 
 import io.leego.banana.BananaUtils as BananaUtils
