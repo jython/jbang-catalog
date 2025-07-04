@@ -96,13 +96,10 @@ public class JythonCli {
      */
     static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
-        String major;
         if (version.startsWith("1.")) {
-            major = version.substring(2, 3);
-        } else {
-            major = getLeadingDigits(version);
+            version = version.substring(2);
         }
-        return major;
+        return getLeadingDigits(version);
     }
 
     /**
