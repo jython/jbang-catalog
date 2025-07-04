@@ -63,18 +63,10 @@ public class JythonCli {
      */
     static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
-        String major = "";
         if (version.startsWith("1.")) {
-            major = version.substring(2, 3);
-        } else {
-            int dotIndex = version.indexOf(".");
-            if (dotIndex != -1) {
-                major = version.substring(0, dotIndex);
-            } else {
-                major = version;
-            }
+            version = version.substring(2);
         }
-        return major;
+        return version.replaceAll("(\\d+).+", "$1");
     }
 
     /**
