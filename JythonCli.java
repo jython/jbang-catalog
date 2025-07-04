@@ -126,7 +126,7 @@ public class JythonCli {
         while (matcher.find()) {
             String type = matcher.group("type");
             if (type.equals("jbang")) {
-                if (!tomlText.isEmpty()) {
+                if (!(tomlText.length() == 0)) {  // Java 8
                     tomlText = new StringBuilder();
                     errorReportingEnabled = false;
                     System.err.println("[jython-cli] error - multiple jbang content blocks detected and discarded");
@@ -144,12 +144,12 @@ public class JythonCli {
                 tomlText = new StringBuilder(String.join("\n", tomlLines));
             }
         }
-        if (tomlText.isEmpty() && errorReportingEnabled) {
+        if ((tomlText.length() == 0) && errorReportingEnabled) {  // Java 8
             if (fileText.contains("# /// jbang")) {
                 System.err.println("[jython-cli] error - malformed jbang content block detected");
                 boolean found = false;
                 for (String line : fileText.split("\n")) {
-                    line = line.strip();
+                    line = line.trim();  // Java 8
                     if (line.equals("# /// jbang")) {
                         System.err.println(line);
                         found = true;
