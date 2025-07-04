@@ -54,39 +54,6 @@ public class JythonCli {
      */
     boolean debug = false;
 
-    /** Return the leading digits of a Java version string
-     * such as "25-ea", "24-amzn", "26.ea.3-graal", etc.
-     * @param str Java version string as displayed by {@code java -version}
-     * @return major version number (String)
-     */
-    public static String getLeadingDigits(String str) {
-        // Handle null or empty input strings
-        if (str == null || str.isEmpty()) {
-            return "";
-        }
-
-        // Use StringBuilder for efficient string concatenation
-        StringBuilder leadingDigits = new StringBuilder();
-
-        // Iterate through each character of the string
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-
-            // Check if the current character is a digit
-            if (Character.isDigit(ch)) {
-                // If it's a digit, append it to our StringBuilder
-                leadingDigits.append(ch);
-            } else {
-                // If it's not a digit, we've reached the end of the leading digits sequence,
-                // so break the loop.
-                break;
-            }
-        }
-
-        // Convert the StringBuilder content to a String and return it
-        return leadingDigits.toString();
-    }
-
     /**
      * Determine the major version number of the JVM {@code jython-cli} is
      * running on.
@@ -99,7 +66,7 @@ public class JythonCli {
         if (version.startsWith("1.")) {
             version = version.substring(2);
         }
-        return getLeadingDigits(version);
+        return version.replaceAll("(\\d+).+", "$1");
     }
 
     /**
