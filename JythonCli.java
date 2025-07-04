@@ -6,6 +6,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
@@ -112,29 +116,54 @@ public class JythonCli {
      * @throws IOException
      */
     void readJBangBlock() throws IOException {
-
-        // Extract TOML data as a String
-        List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-        boolean found = false;
-        int lineno = 0;
-        for (String line : lines) {
-            lineno++;
-            if (found && !line.startsWith("# ")) {
-                found = false;
-                tomlText = new StringBuilder();
-            }
-            if (!found && line.startsWith("# /// jbang")) {
-                printIfDebug(lineno, line);
-                found = true;
-            } else if (found && line.startsWith("# ///")) {
-                printIfDebug(lineno, line);
-                break;
-            } else if (found && line.startsWith("# ")) {
-                printIfDebug(lineno, line);
-                if (tomlText.length() > 0) {
-                    tomlText.append("\n");
+        boolean errorReportingEnabled = true;
+        String fileText = Files.readAllLines(Paths.get(scriptFilename))
+                .stream()
+                .collect(Collectors.joining("\n"));
+        String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
+        Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(fileText);
+        while (matcher.find()) {
+            String type = matcher.group("type");
+            if (type.equals("jbang")) {
+                if (!tomlText.isEmpty()) {
+                    tomlText = new StringBuilder();
+                    errorReportingEnabled = false;
+                    System.err.println("[jython-cli] error - multiple jbang content blocks detected and discarded");
+                    break;
                 }
-                tomlText.append(line.substring(2));
+                String jbangComment = matcher.group("content");
+                List<String> tomlLines = new ArrayList<>();
+                for (String line : jbangComment.split("\n")) {
+                    if (line.startsWith("# ")) {
+                        tomlLines.add(line.substring(2));
+                    } else {
+                        tomlLines.add(line.substring(1));
+                    }
+                }
+                tomlText = new StringBuilder(String.join("\n", tomlLines));
+            }
+        }
+        if (tomlText.isEmpty() && errorReportingEnabled) {
+            if (fileText.contains("# /// jbang")) {
+                System.err.println("[jython-cli] error - malformed jbang content block detected");
+                boolean found = false;
+                for (String line : fileText.split("\n")) {
+                    line = line.strip();
+                    if (line.equals("# /// jbang")) {
+                        System.err.println(line);
+                        found = true;
+                        continue;
+                    }
+                    if (found) {
+                        if (line.startsWith("#")) {
+                            System.err.println(line);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                System.exit(1);
             }
         }
     }
