@@ -2,8 +2,4 @@
 
 # simpletest.py
 
-# /// jbang
-# debug = true
-# ///
-
 print(1+2)
