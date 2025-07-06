@@ -1,5 +1,9 @@
 {
   "aliases": {
+    "cli": {
+      "script-ref": "JythonCli.java",
+      "description": "Run Jython 2.7"
+    },
     "jython-cli": {
       "script-ref": "JythonCli.java",
       "description": "Run Jython 2.7"
