@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlParseError;
 
 public class JythonCli {
 
@@ -179,8 +180,17 @@ public class JythonCli {
     void interpretJBangBlock() throws IOException {
 
         if (tomlText.length() > 0) {
+            int lineno = 0;
+            for (String line: tomlText.toString().split("\\n", -1)) {
+                lineno += 1;
+                printIfDebug(lineno, line);
+            }
             tpr = Toml.parse(tomlText.toString());
-            printIfDebug(tpr.toJson());
+            if (tpr.hasErrors()) {
+                for (TomlParseError err: tpr.errors()) {
+                    System.err.println(err.toString());
+                }
+            }
         }
 
         // Process the TOML data
@@ -262,7 +272,7 @@ public class JythonCli {
      */
     void printIfDebug(int lineno, String line) {
         if (debug) {
-            System.err.printf("%6d :%s\n", lineno, line);
+            System.err.printf("{%3d} %s\n", lineno, line);
         }
     }
 
