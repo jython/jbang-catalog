@@ -164,7 +164,7 @@ public class JythonCli {
                         }
                     }
                 }
-                System.exit(1);
+                throw new IOException();
             }
         }
     }
@@ -191,6 +191,7 @@ public class JythonCli {
                     System.err.println(err.toString());
                 }
             }
+            throw new IOException();
         }
 
         // Process the TOML data
