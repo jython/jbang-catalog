@@ -190,8 +190,8 @@ public class JythonCli {
                 for (TomlParseError err: tpr.errors()) {
                     System.err.println(err.toString());
                 }
+                throw new IOException();
             }
-            throw new IOException();
         }
 
         // Process the TOML data
