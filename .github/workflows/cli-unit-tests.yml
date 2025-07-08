@@ -29,7 +29,7 @@ jobs:
       - name: Test with JBang
         run: |
           ls -a $HOME/.jbang/bin
-          #export PATH="$HOME/.jbang/bin:$PATH"
+          export PATH="$HOME/.jbang/bin:$PATH"
           #hash -r
           which jbang
           jbang jython-cli --cli-debug -V
