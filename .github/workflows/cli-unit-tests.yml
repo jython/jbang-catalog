@@ -22,15 +22,10 @@ jobs:
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           ls -a $HOME/.jbang/bin
+          which jbang
           export PATH="$HOME/.jbang/bin:$PATH"
           hash -r
           which jbang
 
       - name: Test with JBang
-        run: |
-          which jbang
-          #ls -a $HOME/.jbang/bin
-          #export PATH="$HOME/.jbang/bin:$PATH"
-          #hash -r
-          #which jbang
-          #jbang jython-cli --cli-debug -V
+        run: which jbang
