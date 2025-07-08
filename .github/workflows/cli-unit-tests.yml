@@ -1,0 +1,30 @@
+name: jython-cli unit tests
+
+run-name: Run JUnit tests on JythonCli using JBang 
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  jython-cli-unit-tests-Ubuntu-jdk-17:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job was triggered by a ${{ github.event_name }} event."
+      - run: echo "Branch ${{ github.ref }} of repository ${{ github.repository }}."
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install JBang by one-liner
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          export PATH="$HOME/.jbang/bin:$PATH"
+          which jbang
+
+      - name: Test with JBang
+        run: |
+          export PATH="$HOME/.jbang/bin:$PATH"
+          jbang TestJythonCli.java execute --disable-ansi-colors --select-class=TestJythonCli
