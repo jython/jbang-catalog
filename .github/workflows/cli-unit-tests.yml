@@ -22,7 +22,8 @@ jobs:
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           ls -a
-          cat .bashrc
+          #cat /etc/profile
+          #cat /etc/bash.bashrc
 
       - name: Test with JBang
         run: |
