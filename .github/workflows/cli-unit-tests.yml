@@ -21,11 +21,10 @@ jobs:
       - name: Install JBang by one-liner
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          ls -a
           ls -a ~
-          cat /etc/profile
-          cat /etc/bash.bashrc
-          source ~/.bash_profile
+          cat ~/.bash_profile
+          cat ~/.bashrc
+          cat ~/.profile
 
       - name: Test with JBang
         run: |
