@@ -1,4 +1,4 @@
-|name: jython-cli unit tests
+name: jython-cli unit tests
 
 run-name: Run JUnit tests on JythonCli uning JBang 
 
