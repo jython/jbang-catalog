@@ -1,0 +1,16 @@
+name: jython-cli unit tests
+
+run-name: Run JUnit tests on JythonCli uning JBang 
+
+on: [push]
+
+jobs:
+  jython-cli-unit-tests-Ubuntu-jdk-17:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job was triggered by a ${{ github.event_name }} event."
+      - run: echo "Branch ${{ github.ref }} of repository ${{ github.repository }}."
+      - uses: actions/checkout@v4
+
+      - run: |
+         ls ${{ github.workspace }}
