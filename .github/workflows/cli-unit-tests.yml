@@ -22,9 +22,10 @@ jobs:
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           ls -a
+          ls -a ~
           cat /etc/profile
           cat /etc/bash.bashrc
-          source /etc/bash.bashrc
+          source ~/.bash_profile
 
       - name: Test with JBang
         run: |
