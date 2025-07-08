@@ -2,7 +2,7 @@ name: jython-cli unit tests
 
 run-name: Run JUnit tests on JythonCli using JBang 
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   jython-cli-unit-tests-Ubuntu-jdk-17:
@@ -27,5 +27,4 @@ jobs:
       - name: Test with JBang
         run: |
           export PATH="$HOME/.jbang/bin:$PATH"
-          which jbang
-          jbang jython-cli --cli-debug -V
+          jbang TestJythonCli.java execute --disable-ansi-colors --select-class=TestJythonCli
