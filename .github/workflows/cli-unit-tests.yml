@@ -21,9 +21,8 @@ jobs:
       - name: Install JBang by one-liner
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          ls -a ~
-          cat ~/.bashrc
-          source ~/.bashrc
+          export PATH="$HOME/.jbang/bin:$PATH"
+          hash -r
 
       - name: Test with JBang
         run: |
