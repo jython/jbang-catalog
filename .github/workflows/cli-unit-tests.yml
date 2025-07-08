@@ -1,4 +1,4 @@
-name: jython-cli unit tests
+|name: jython-cli unit tests
 
 run-name: Run JUnit tests on JythonCli uning JBang 
 
@@ -21,7 +21,9 @@ jobs:
       - name: Install JBang by one-liner
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
+          cat .profile
+          cat .bashrc
 
       - name: Test with JBang
         run: |
-          jbang jython-cli --cli-debug -V
+          bash -c 'jbang jython-cli --cli-debug -V'
