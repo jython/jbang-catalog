@@ -19,9 +19,9 @@ jobs:
           java-version: '17'
 
       - name: Install JBang by one-liner
-        run:
+        run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
 
       - name: Test with JBang
-      - run: |
+        run: |
           jbang jython-cli --cli-debug -V
