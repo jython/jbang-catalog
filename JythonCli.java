@@ -1,3 +1,4 @@
+
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS org.tomlj:tomlj:1.1.1
@@ -92,7 +93,7 @@ public class JythonCli {
         }
 
         for (String arg : args) {
-            if (scriptFilename==null && arg.endsWith(".py")) {
+            if (scriptFilename == null && arg.endsWith(".py")) {
                 scriptFilename = arg;
                 jythonArgs.add(arg);
             } else if ("--cli-debug".equals(arg)) {
@@ -119,6 +120,42 @@ public class JythonCli {
         int lineno = 0;
         for (String line : lines) {
             lineno++;
+            if (found && !line.startsWith("# ")) {
+                found = false;
+                tomlText = new StringBuilder();
+            }
+            if (!found && line.startsWith("# /// jbang")) {
+                printIfDebug(lineno, line);
+                found = true;
+            } else if (found && line.startsWith("# ///")) {
+                printIfDebug(lineno, line);
+                break;
+            } else if (found && line.startsWith("# ")) {
+                printIfDebug(lineno, line);
+                if (tomlText.length() > 0) {
+                    tomlText.append("\n");
+                }
+                tomlText.append(line.substring(2));
+            }
+        }
+    }
+
+    /**
+     * Read the jbang block from the Jython script specified on the command-line
+     * containing (optional) and interpret it as TOML data. The runtime options
+     * that are extracted from the TOML data will override default version
+     * specifications determined earlier.
+     *
+     * @throws IOException
+     */
+    void readJBangBlock(Reader script) throws IOException {
+
+        // Extract TOML data as a String
+        LineNumberReader lines = new LineNumberReader(script);
+        String line;
+        boolean found = false;
+        while ((line = lines.readLine())!=null) {
+            int lineno = lines.getLineNumber();
             if (found && !line.startsWith("# ")) {
                 found = false;
                 tomlText = new StringBuilder();
@@ -259,7 +296,7 @@ public class JythonCli {
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         // Create an instance of the class in which to compose argument list
         JythonCli jythonCli = new JythonCli();
 
@@ -268,7 +305,10 @@ public class JythonCli {
 
             // Normally we have a script file (but it's optional)
             if (jythonCli.scriptFilename != null) {
-                jythonCli.readJBangBlock();
+                Reader script = new BufferedReader(
+                    new InputStreamReader(
+                        new FileInputStream(jythonCli.scriptFilename)));
+                jythonCli.readJBangBlock(script);
                 jythonCli.interpretJBangBlock();
             }
 

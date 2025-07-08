@@ -8,6 +8,9 @@
 //DEPS org.junit.platform:junit-platform-console:1.13.3
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ public class TestJythonCli {
 
     static final String[] ARGS_DEBUG_FOO = {"--cli-debug", "foo.py", "bar", "baz"};
     static final String[] ARGS_FOO = {"--version", "foo.py", "bar.py", "baz"};
+    static final String[] ARGS_NONE = {"--cli-debug"};
 
     /** The {@code --debug-cli} flag is spotted */
     @Test
@@ -40,7 +44,7 @@ public class TestJythonCli {
         assertEquals("foo.py", cli.scriptFilename);
     }
 
-    /** Argumnents to the Jython command are assembled in order. */
+    /** Arguments to the Jython command are assembled in order. */
     @Test
     void testJythonArgs() throws IOException {
         JythonCli cli = new JythonCli();
@@ -50,6 +54,60 @@ public class TestJythonCli {
         assertEquals("bar.py", cli.jythonArgs.get(2));
         assertEquals("baz", cli.jythonArgs.get(3));
     }
+
+    /** Two {@code jbang} blocks is an error. */
+    @Test
+    void testTwoBlocks() throws IOException {
+        JythonCli cli = new JythonCli();
+        cli.initEnvironment(ARGS_NONE);
+        Reader script = new StringReader("""
+                # Valid but not for us
+                # /// script
+                # requires-python = ">=3.11"
+                # dependencies = [
+                #   "requests<3",
+                #   "rich",
+                # ]
+                # ///
+
+                # /// jbang
+                # requires-jython = "2.7.2"
+                # requires-java = "8"
+                # ///
+
+                # /// jbang
+                # requires-jython = "2.7.3"
+                # ///
+         """);
+        assertThrows(
+            Exception.class,
+            ()->cli.readJBangBlock(script)
+        );
+    }
+
+    /** Invalid TOML is an error. */
+    // Unfortunately, we doen't seem to notice
+    @Test
+    void testInvalidTOML() throws IOException {
+        JythonCli cli = new JythonCli();
+        cli.initEnvironment(ARGS_NONE);
+        Reader script = new StringReader("""
+                Good JBang block containing bad TOML
+                # /// jbang
+                # requires-java = "8"
+                # stuff = {
+                #   nonsense = 42
+                #   Quatsch =::
+                # }
+                # ///
+                print("Hello World!")
+                """);
+        assertThrows(
+            Exception.class,
+            ()->cli.readJBangBlock(script)
+        );
+    }
+
 
     /**
      * Run the JUnit console with arguments from our command line.
