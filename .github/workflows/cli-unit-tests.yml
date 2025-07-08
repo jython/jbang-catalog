@@ -2,7 +2,7 @@ name: jython-cli unit tests
 
 run-name: Run JUnit tests on JythonCli using JBang 
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   jython-cli-unit-tests-Ubuntu-jdk-17:
