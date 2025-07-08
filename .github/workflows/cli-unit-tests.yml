@@ -21,15 +21,11 @@ jobs:
       - name: Install JBang by one-liner
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          ls -a $HOME/.jbang/bin
           export PATH="$HOME/.jbang/bin:$PATH"
-          hash -r
           which jbang
 
       - name: Test with JBang
         run: |
-          ls -a $HOME/.jbang/bin
           export PATH="$HOME/.jbang/bin:$PATH"
-          #hash -r
           which jbang
           jbang jython-cli --cli-debug -V
