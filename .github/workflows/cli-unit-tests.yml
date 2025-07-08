@@ -22,10 +22,9 @@ jobs:
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           ls -a ~
-          cat ~/.bash_profile
           cat ~/.bashrc
-          cat ~/.profile
+          source ~/.bashrc
 
       - name: Test with JBang
         run: |
-          bash -c 'jbang jython-cli --cli-debug -V'
+          jbang jython-cli --cli-debug -V
