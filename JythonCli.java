@@ -4,7 +4,6 @@
 //DEPS org.tomlj:tomlj:1.1.1
 
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 
 import org.tomlj.Toml;
@@ -104,43 +103,7 @@ public class JythonCli {
         }
     }
 
-    /**
-     * Read the jbang block from the Jython script specified on the command-line
-     * containing (optional) and interpret it as TOML data. The runtime options
-     * that are extracted from the TOML data will override default version
-     * specifications determined earlier.
-     *
-     * @throws IOException
-     */
-    void readJBangBlock() throws IOException {
-
-        // Extract TOML data as a String
-        List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-        boolean found = false;
-        int lineno = 0;
-        for (String line : lines) {
-            lineno++;
-            if (found && !line.startsWith("# ")) {
-                found = false;
-                tomlText = new StringBuilder();
-            }
-            if (!found && line.startsWith("# /// jbang")) {
-                printIfDebug(lineno, line);
-                found = true;
-            } else if (found && line.startsWith("# ///")) {
-                printIfDebug(lineno, line);
-                break;
-            } else if (found && line.startsWith("# ")) {
-                printIfDebug(lineno, line);
-                if (tomlText.length() > 0) {
-                    tomlText.append("\n");
-                }
-                tomlText.append(line.substring(2));
-            }
-        }
-    }
-
-    /**
+     /**
      * Read the jbang block from the Jython script specified on the command-line
      * containing (optional) and interpret it as TOML data. The runtime options
      * that are extracted from the TOML data will override default version
