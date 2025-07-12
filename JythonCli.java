@@ -6,8 +6,13 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlParseError;
 
 public class JythonCli {
 
@@ -112,29 +117,54 @@ public class JythonCli {
      * @throws IOException
      */
     void readJBangBlock() throws IOException {
-
-        // Extract TOML data as a String
-        List<String> lines = Files.readAllLines(Paths.get(scriptFilename));
-        boolean found = false;
-        int lineno = 0;
-        for (String line : lines) {
-            lineno++;
-            if (found && !line.startsWith("# ")) {
-                found = false;
-                tomlText = new StringBuilder();
-            }
-            if (!found && line.startsWith("# /// jbang")) {
-                printIfDebug(lineno, line);
-                found = true;
-            } else if (found && line.startsWith("# ///")) {
-                printIfDebug(lineno, line);
-                break;
-            } else if (found && line.startsWith("# ")) {
-                printIfDebug(lineno, line);
-                if (tomlText.length() > 0) {
-                    tomlText.append("\n");
+        boolean errorReportingEnabled = true;
+        String fileText = Files.readAllLines(Paths.get(scriptFilename))
+                .stream()
+                .collect(Collectors.joining("\n"));
+        String tomlRegex = "^# /// (?<type>[a-zA-Z0-9-]+)$\\s(?<content>(^#(| .*)$\\s)+)^# ///$";
+        Pattern pattern = Pattern.compile(tomlRegex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(fileText);
+        while (matcher.find()) {
+            String type = matcher.group("type");
+            if (type.equals("jbang")) {
+                if (!(tomlText.length() == 0)) {  // Java 8
+                    tomlText = new StringBuilder();
+                    errorReportingEnabled = false;
+                    System.err.println("[jython-cli] error - multiple jbang content blocks detected and discarded");
+                    break;
                 }
-                tomlText.append(line.substring(2));
+                String jbangComment = matcher.group("content");
+                List<String> tomlLines = new ArrayList<>();
+                for (String line : jbangComment.split("\n")) {
+                    if (line.startsWith("# ")) {
+                        tomlLines.add(line.substring(2));
+                    } else {
+                        tomlLines.add(line.substring(1));
+                    }
+                }
+                tomlText = new StringBuilder(String.join("\n", tomlLines));
+            }
+        }
+        if ((tomlText.length() == 0) && errorReportingEnabled) {  // Java 8
+            if (fileText.contains("# /// jbang")) {
+                System.err.println("[jython-cli] error - malformed jbang content block detected");
+                boolean found = false;
+                for (String line : fileText.split("\n")) {
+                    line = line.trim();  // Java 8
+                    if (line.equals("# /// jbang")) {
+                        System.err.println(line);
+                        found = true;
+                        continue;
+                    }
+                    if (found) {
+                        if (line.startsWith("#")) {
+                            System.err.println(line);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                throw new IOException();
             }
         }
     }
@@ -150,8 +180,18 @@ public class JythonCli {
     void interpretJBangBlock() throws IOException {
 
         if (tomlText.length() > 0) {
+            int lineno = 0;
+            for (String line: tomlText.toString().split("\\n", -1)) {
+                lineno += 1;
+                printIfDebug(lineno, line);
+            }
             tpr = Toml.parse(tomlText.toString());
-            printIfDebug(tpr.toJson());
+            if (tpr.hasErrors()) {
+                for (TomlParseError err: tpr.errors()) {
+                    System.err.println(err.toString());
+                }
+                throw new IOException();
+            }
         }
 
         // Process the TOML data
@@ -233,7 +273,7 @@ public class JythonCli {
      */
     void printIfDebug(int lineno, String line) {
         if (debug) {
-            System.err.printf("%6d :%s\n", lineno, line);
+            System.err.printf("{%3d} %s\n", lineno, line);
         }
     }
 
