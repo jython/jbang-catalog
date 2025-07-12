@@ -72,7 +72,8 @@ public class TestJythonCli {
 
     /**
      * An unterminated block may gobble up a {@code jbang} block. This
-     * is not detectable by {@link JythonCli}.
+     * is not detectable by {@link JythonCli} as the text of a
+     * {@code jbang} header could be legitimate content.
      */
     @Test
     void testGobbledBlock() throws IOException {
@@ -85,8 +86,8 @@ public class TestJythonCli {
                        # requires-java = "8"
                        # ///
                 """);
-        assertTrue(cli.tomlText.isEmpty());
-        assertNull(cli.tpr);
+        assertTrue(cli.tomlText.isEmpty(), "Check TOML text is empty");
+        assertNull(cli.tpr, "Check TOML parse not done");
     }
 
     /**
@@ -108,8 +109,8 @@ public class TestJythonCli {
         """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
-        assertFalse(cli.tomlText.isEmpty());
-        assertTrue(cli.tpr.hasErrors());
+        assertFalse(cli.tomlText.isEmpty(), "Detect TOML text is empty");
+        assertTrue(cli.tpr.hasErrors(), "Check TOML parse reports errors");
     }
 
     /** Two {@code jbang} blocks is an error. */
