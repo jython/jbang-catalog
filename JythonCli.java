@@ -1,4 +1,3 @@
-
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS org.tomlj:tomlj:1.1.1
@@ -103,12 +102,12 @@ public class JythonCli {
         }
     }
 
-     /**
-     * Read the jbang block from the Jython script specified on the command-line
-     * containing (optional) and interpret it as TOML data. The runtime options
-     * that are extracted from the TOML data will override default version
-     * specifications determined earlier.
+    /**
+     * Read a script and parse out a {@code jbang} block if possible,
+     * later to be interpreted as TOML data. Errors to do with framing
+     * the block are detected here, while errors in content must wait.
      *
+     * @param script supplying text of the script
      * @throws IOException
      */
     void readJBangBlock(Reader script) throws IOException {

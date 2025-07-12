@@ -221,6 +221,19 @@ jbang run jython-cli@jython turtle.py
 
 ## Development testing
 
+### Systematic
+
+The JUnit test that will run when a PR is submitted may be used locally:
+```
+jbang --java 17 TestJythonCli.java execute --disable-ansi-colors --select-class=TestJythonCli
+```
+This makes a fairly thorough test of the parsing of JBang specification blocks.
+It has no coverage of actually running a script.
+
+The test won't currently compile with less than Java 17.
+
+### Ad Hoc
+
 If the `jython_cli.java` program is modified and needs to be tested (before changes
 are submitted to the repo), the example scripts can be used as tests and run 
 locally (using Java 21):
