@@ -225,8 +225,22 @@ public class JythonCli {
 
         printIfDebug("");
         printIfDebug("JBang command-line parameters:");
+        boolean indentText = false;
         for (String e : cmd) {
-            printIfDebug("    " + e);
+            if (indentText) {
+                printIfDebug("      " + e);
+            } else {
+                printIfDebug("    " + e);
+            }
+            if (e.startsWith("--")) {
+                if (indentText == false) {
+                    indentText = true;
+                } else {
+                    indentText = false;
+                }
+            } else {
+                indentText = false;
+            }
         }
         printIfDebug("");
 
