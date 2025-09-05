@@ -221,8 +221,6 @@ public class JythonCli {
 
         cmd.add("org.python:jython-slim:" + jythonVersion);
 
-        cmd.addAll(jythonArgs);
-
         printIfDebug("");
         printIfDebug("JBang command-line parameters:");
         boolean indentText = false;
@@ -241,6 +239,10 @@ public class JythonCli {
             } else {
                 indentText = false;
             }
+        }
+        cmd.addAll(jythonArgs);
+        for (String e : jythonArgs) {
+            printIfDebug("    " + e);
         }
         printIfDebug("");
 
