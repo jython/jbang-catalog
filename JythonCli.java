@@ -206,9 +206,32 @@ public class JythonCli {
 
         cmd.add("org.python:jython-slim:" + jythonVersion);
 
+        printIfDebug("");
+        printIfDebug("JBang command-line parameters:");
+        boolean indentText = false;
+        for (String e : cmd) {
+            if (indentText) {
+                printIfDebug("      " + e);
+            } else {
+                printIfDebug("    " + e);
+            }
+            if (e.startsWith("--")) {
+                if (indentText == false) {
+                    indentText = true;
+                } else {
+                    indentText = false;
+                }
+            } else {
+                indentText = false;
+            }
+        }
+
         cmd.addAll(jythonArgs);
 
-        printIfDebug(cmd.toString());
+        for (String e : jythonArgs) {
+            printIfDebug("    " + e);
+        }
+        printIfDebug("");
 
         ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.inheritIO();
