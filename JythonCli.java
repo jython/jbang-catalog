@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlParseError;
 
 public class JythonCli {
 
@@ -108,6 +109,8 @@ public class JythonCli {
         LineNumberReader lines = new LineNumberReader(script);
         String line;
         boolean found = false;
+        printIfDebug("");
+        printIfDebug("TOML data in Jython script:");
         while ((line = lines.readLine())!=null) {
             int lineno = lines.getLineNumber();
             if (found && !line.startsWith("# ")) {
@@ -141,8 +144,20 @@ public class JythonCli {
     void interpretJBangBlock() throws IOException {
 
         if (tomlText.length() > 0) {
+            int lineno = 0;
+            printIfDebug("");
+            printIfDebug("TOML data extracted from Jython script:");
+            for (String line: tomlText.toString().split("\\n", -1)) {
+                lineno += 1;
+                printIfDebug(lineno, line);
+            }
             tpr = Toml.parse(tomlText.toString());
-            printIfDebug(tpr.toJson());
+            if (tpr.hasErrors()) {
+                for (TomlParseError err: tpr.errors()) {
+                    System.err.println(err.toString());
+                }
+                throw new IOException();
+            }
         }
 
         // Process the TOML data
