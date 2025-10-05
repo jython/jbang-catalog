@@ -123,7 +123,10 @@ public class JythonCli {
             } else if (found && line.startsWith("# ///")) {
                 printIfDebug(lineno, line);
                 break;
-            } else if (found && line.startsWith("# ")) {
+            } else if (found && (line.startsWith("# ") || line.equals("#"))) {
+                if (line.length() == 1) {
+                    line += " ";
+                }
                 printIfDebug(lineno, line);
                 if (tomlText.length() > 0) {
                     tomlText.append("\n");
