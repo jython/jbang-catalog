@@ -156,7 +156,11 @@ public class JythonCli {
                 for (TomlParseError err: tpr.errors()) {
                     System.err.println(err.toString());
                 }
-                throw new IOException();
+                if (debug) {
+                    throw new IOException("Error interpreting JBang TOML data.");
+                } else {
+                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--debug-cli' for details.");
+                }
             }
         }
 
