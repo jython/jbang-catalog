@@ -137,18 +137,20 @@ public class TestJythonCli {
 
     /** Invalid TOML is an error. */
     @Test
-    @Disabled("interpretJBangBlock does not throw for invalid TOML")
     void testInvalidTOML() throws IOException {
         String script = """
-                # /// jbang
-                # requires-java = "8"
-                # stuff = {
-                #   nonsense = 42
-                #   Quatsch =::
-                # }
-                # ///
-                print("Hello World!")
-        """;
+        # /// jbang
+        # requires-jython = "2.7.4"
+        # requires-java = "21"
+        # dependencies = [
+        #   "io.leego:banana:2.1.0"
+        # ]
+        # runtime-options = [
+        #   "-Dpython.console.encoding=UTF-8"
+        # -
+        # ///
+        print("Hello World!")
+        """.stripIndent();
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }
@@ -161,8 +163,7 @@ public class TestJythonCli {
      * @param script to process as script
      * @throws IOException on StringReader errors
      */
-    void processScript(JythonCli cli, String script)
-            throws IOException {
+    void processScript(JythonCli cli, String script) throws IOException {
         cli.initEnvironment(ARGS_NONE);
         cli.readJBangBlock(new StringReader(script));
         cli.interpretJBangBlock();
@@ -175,6 +176,11 @@ public class TestJythonCli {
      */
     public static void main(String[] args) throws IOException {
         // Run the JUnit console
-        ConsoleLauncher.main(args);
+        if (true) {
+            ConsoleLauncher.main(args);
+        } else {
+            // Debugging code
+            new TestJythonCli().testInvalidTOML();
+        }
     }
 }
