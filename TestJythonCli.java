@@ -173,7 +173,7 @@ public class TestJythonCli {
      *
      * @param args to pass to the JUnit console
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Run the JUnit console
         ConsoleLauncher.main(args);
     }
