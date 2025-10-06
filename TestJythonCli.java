@@ -150,7 +150,7 @@ public class TestJythonCli {
         # -
         # ///
         print("Hello World!")
-        """.stripIndent();
+        """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }
