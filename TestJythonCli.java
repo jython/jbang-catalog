@@ -21,11 +21,9 @@ import org.junit.platform.console.ConsoleLauncher;
  */
 public class TestJythonCli {
 
-    static final String[] ARGS_DEBUG_FOO =
-            {"--cli-debug", "foo.py", "bar", "baz"};
-    static final String[] ARGS_FOO =
-            {"--version", "foo.py", "bar.py", "baz"};
-    static final String[] ARGS_NONE = {"--cli-debug"};
+    static final String[] ARGS_DEBUG_FOO = { "--cli-debug", "foo.py", "bar", "baz" };
+    static final String[] ARGS_FOO = { "--version", "foo.py", "bar.py", "baz" };
+    static final String[] ARGS_NONE = { "--cli-debug" };
 
     /** The {@code --debug-cli} flag is spotted */
     @Test
@@ -99,13 +97,13 @@ public class TestJythonCli {
     @Disabled("interpretJBangBlock does not throw for invalid TOML")
     void testCollision() throws IOException {
         String script = """
-                # /// jbang
-                # requires-jython = "2.7.2"
-                # requires-java = "8"
-                # /// script
-                # requires-python = ">=3.11"
-                # ///
-        """;
+                        # /// jbang
+                        # requires-jython = "2.7.2"
+                        # requires-java = "8"
+                        # /// script
+                        # requires-python = ">=3.11"
+                        # ///
+                """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
         assertFalse(cli.tomlText.isEmpty(), "Detect TOML text is empty");
@@ -117,20 +115,20 @@ public class TestJythonCli {
     @Disabled("readJBangBlock does not throw on a second jbang block")
     void testTwoBlocks() throws IOException {
         String script = """
-                # /// jbang
-                # requires-jython = "2.7.2"
-                # requires-java = "8"
-                # ///
+                        # /// jbang
+                        # requires-jython = "2.7.2"
+                        # requires-java = "8"
+                        # ///
 
-                # Valid but not for us
-                # /// script
-                # requires-python = ">=3.11"
-                # ///
+                        # Valid but not for us
+                        # /// script
+                        # requires-python = ">=3.11"
+                        # ///
 
-                # /// jbang
-                # requires-jython = "2.7.3"
-                # ///
-        """;
+                        # /// jbang
+                        # requires-jython = "2.7.3"
+                        # ///
+                """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }
@@ -139,18 +137,18 @@ public class TestJythonCli {
     @Test
     void testInvalidTOML() throws IOException {
         String script = """
-        # /// jbang
-        # requires-jython = "2.7.4"
-        # requires-java = "21"
-        # dependencies = [
-        #   "io.leego:banana:2.1.0"
-        # ]
-        # runtime-options = [
-        #   "-Dpython.console.encoding=UTF-8"
-        # -
-        # ///
-        print("Hello World!")
-        """.stripIndent();
+                # /// jbang
+                # requires-jython = "2.7.4"
+                # requires-java = "21"
+                # dependencies = [
+                #   "io.leego:banana:2.1.0"
+                # ]
+                # runtime-options = [
+                #   "-Dpython.console.encoding=UTF-8"
+                # -
+                # ///
+                print("Hello World!")
+                """.stripIndent();
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }

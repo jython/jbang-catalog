@@ -3,6 +3,20 @@
     "jython-cli": {
       "script-ref": "JythonCli.java",
       "description": "Run Jython 2.7"
+    },
+    "jbang-fmt": {
+      "script-ref": "jbang-fmt@jbangdev/jbang-fmt",
+      "description": "A script that formats JBang Java source files",
+      "arguments": [
+        "--line-length",
+        "90",
+        "--java",
+        "8",
+        "--indent-with",
+        "space",
+        "--indent-size",
+        "4"
+      ]
     }
   }
 }

@@ -111,7 +111,7 @@ public class JythonCli {
         boolean found = false;
         printIfDebug("");
         printIfDebug("TOML data in Jython script:");
-        while ((line = lines.readLine())!=null) {
+        while ((line = lines.readLine()) != null) {
             int lineno = lines.getLineNumber();
             if (found && !line.startsWith("# ")) {
                 found = false;
@@ -150,19 +150,20 @@ public class JythonCli {
             int lineno = 0;
             printIfDebug("");
             printIfDebug("TOML data extracted from Jython script:");
-            for (String line: tomlText.toString().split("\\n", -1)) {
+            for (String line : tomlText.toString().split("\\n", -1)) {
                 lineno += 1;
                 printIfDebug(lineno, line);
             }
             tpr = Toml.parse(tomlText.toString());
             if (tpr.hasErrors()) {
-                for (TomlParseError err: tpr.errors()) {
+                for (TomlParseError err : tpr.errors()) {
                     System.err.println(err.toString());
                 }
                 if (debug) {
                     throw new IOException("Error interpreting JBang TOML data.");
                 } else {
-                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--debug-cli' for details.");
+                    throw new IOException(
+                            "Error interpreting JBang TOML data. Re-run with '--debug-cli' for details.");
                 }
             }
         }
@@ -282,8 +283,8 @@ public class JythonCli {
             // Normally we have a script file (but it's optional)
             if (jythonCli.scriptFilename != null) {
                 Reader script = new BufferedReader(
-                    new InputStreamReader(
-                        new FileInputStream(jythonCli.scriptFilename)));
+                        new InputStreamReader(
+                                new FileInputStream(jythonCli.scriptFilename)));
                 jythonCli.readJBangBlock(script);
                 jythonCli.interpretJBangBlock();
             }
