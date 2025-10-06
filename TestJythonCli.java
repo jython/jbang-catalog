@@ -1,4 +1,4 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
+/// usr/bin/env jbang "$0" "$@" ; exit $?
 
 //SOURCES JythonCli.java
 
@@ -6,23 +6,25 @@
 //DEPS org.junit.jupiter:junit-jupiter:5.13.3
 //DEPS org.junit.platform:junit-platform-console:1.13.3
 
+import java.io.IOException;
+import java.io.StringReader;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.ConsoleLauncher;
 
-import java.io.IOException;
-import java.io.StringReader;
-
 /**
- * A class to run tests on aspects of {@link JythonCli} by delegating to the JUnit console {@link
- * ConsoleLauncher}.
+ * A class to run tests on aspects of {@link JythonCli} by delegating to
+ * the JUnit console {@link ConsoleLauncher}.
  */
 public class TestJythonCli {
 
-    static final String[] ARGS_DEBUG_FOO = {"--cli-debug", "foo.py", "bar", "baz"};
-    static final String[] ARGS_FOO = {"--version", "foo.py", "bar.py", "baz"};
+    static final String[] ARGS_DEBUG_FOO =
+            {"--cli-debug", "foo.py", "bar", "baz"};
+    static final String[] ARGS_FOO =
+            {"--version", "foo.py", "bar.py", "baz"};
     static final String[] ARGS_NONE = {"--cli-debug"};
 
     /** The {@code --debug-cli} flag is spotted */
@@ -57,8 +59,7 @@ public class TestJythonCli {
     @Test
     @Disabled("readJBangBlock does not throw on an unterminated block")
     void testUnterminated() throws IOException {
-        String script =
-                """
+        String script = """
                         # /// jbang
                         # requires-jython = "2.7.2"
                         # requires-java = "17"
@@ -69,15 +70,14 @@ public class TestJythonCli {
     }
 
     /**
-     * An unterminated block may gobble up a {@code jbang} block. This is not detectable by {@link
-     * JythonCli} as the text of a {@code jbang} header could be legitimate content.
+     * An unterminated block may gobble up a {@code jbang} block. This
+     * is not detectable by {@link JythonCli} as the text of a
+     * {@code jbang} header could be legitimate content.
      */
     @Test
     void testGobbledBlock() throws IOException {
         JythonCli cli = new JythonCli();
-        processScript(
-                cli,
-                """
+        processScript(cli, """
                        # /// script
                        # requires-python = ">=3.11"
                        # /// jbang
@@ -90,22 +90,22 @@ public class TestJythonCli {
     }
 
     /**
-     * An unterminated {@code jbang} block should gobble up a following block. This ought to be
-     * detectable by {@link JythonCli}. It isn't actually a fault with the block delimiting: but the
-     * gobbled block-start is not valid TOML.
+     * An unterminated {@code jbang} block should gobble up a following
+     * block. This ought to be detectable by {@link JythonCli}. It isn't
+     * actually a fault with the block delimiting: but the gobbled
+     * block-start is not valid TOML.
      */
     @Test
     @Disabled("interpretJBangBlock does not throw for invalid TOML")
     void testCollision() throws IOException {
-        String script =
-                """
-                        # /// jbang
-                        # requires-jython = "2.7.2"
-                        # requires-java = "8"
-                        # /// script
-                        # requires-python = ">=3.11"
-                        # ///
-                """;
+        String script = """
+                # /// jbang
+                # requires-jython = "2.7.2"
+                # requires-java = "8"
+                # /// script
+                # requires-python = ">=3.11"
+                # ///
+        """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
         assertFalse(cli.tomlText.isEmpty(), "Detect TOML text is empty");
@@ -116,22 +116,21 @@ public class TestJythonCli {
     @Test
     @Disabled("readJBangBlock does not throw on a second jbang block")
     void testTwoBlocks() throws IOException {
-        String script =
-                """
-                        # /// jbang
-                        # requires-jython = "2.7.2"
-                        # requires-java = "8"
-                        # ///
+        String script = """
+                # /// jbang
+                # requires-jython = "2.7.2"
+                # requires-java = "8"
+                # ///
 
-                        # Valid but not for us
-                        # /// script
-                        # requires-python = ">=3.11"
-                        # ///
+                # Valid but not for us
+                # /// script
+                # requires-python = ">=3.11"
+                # ///
 
-                        # /// jbang
-                        # requires-jython = "2.7.3"
-                        # ///
-                """;
+                # /// jbang
+                # requires-jython = "2.7.3"
+                # ///
+        """;
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }
@@ -139,27 +138,26 @@ public class TestJythonCli {
     /** Invalid TOML is an error. */
     @Test
     void testInvalidTOML() throws IOException {
-        String script =
-                """
-                # /// jbang
-                # requires-jython = "2.7.4"
-                # requires-java = "21"
-                # dependencies = [
-                #   "io.leego:banana:2.1.0"
-                # ]
-                # runtime-options = [
-                #   "-Dpython.console.encoding=UTF-8"
-                # -
-                # ///
-                print("Hello World!")
-                """;
+        String script = """
+        # /// jbang
+        # requires-jython = "2.7.4"
+        # requires-java = "21"
+        # dependencies = [
+        #   "io.leego:banana:2.1.0"
+        # ]
+        # runtime-options = [
+        #   "-Dpython.console.encoding=UTF-8"
+        # -
+        # ///
+        print("Hello World!")
+        """.stripIndent();
         JythonCli cli = new JythonCli();
         assertThrows(Exception.class, () -> processScript(cli, script));
     }
 
     /**
-     * Take an initialised {@link JythonCli} and have it process (but not run) the given {@code
-     * String} as if the contents of a file.
+     * Take an initialised {@link JythonCli} and have it process (but
+     * not run) the given {@code String} as if the contents of a file.
      *
      * @param cli to exercise
      * @param script to process as script
