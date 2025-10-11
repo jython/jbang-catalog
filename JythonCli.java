@@ -162,7 +162,7 @@ public class JythonCli {
                 if (debug) {
                     throw new IOException("Error interpreting JBang TOML data.");
                 } else {
-                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--debug-cli' for details.");
+                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--cli-debug' for details.");
                 }
             }
         }
