@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlParseError;
 
 public class JythonCli {
 
@@ -65,7 +66,7 @@ public class JythonCli {
         if (version.startsWith("1.")) {
             version = version.substring(2);
         }
-        return version.replaceAll("(\\d+).+", "$1");
+        return version.replaceAll("(\\d+).*", "$1");
     }
 
     /**
@@ -108,6 +109,8 @@ public class JythonCli {
         LineNumberReader lines = new LineNumberReader(script);
         String line;
         boolean found = false;
+        printIfDebug("");
+        printIfDebug("TOML data in Jython script:");
         while ((line = lines.readLine())!=null) {
             int lineno = lines.getLineNumber();
             if (found && !line.startsWith("# ")) {
@@ -120,7 +123,10 @@ public class JythonCli {
             } else if (found && line.startsWith("# ///")) {
                 printIfDebug(lineno, line);
                 break;
-            } else if (found && line.startsWith("# ")) {
+            } else if (found && (line.startsWith("# ") || line.equals("#"))) {
+                if (line.length() == 1) {
+                    line += " ";
+                }
                 printIfDebug(lineno, line);
                 if (tomlText.length() > 0) {
                     tomlText.append("\n");
@@ -141,8 +147,24 @@ public class JythonCli {
     void interpretJBangBlock() throws IOException {
 
         if (tomlText.length() > 0) {
+            int lineno = 0;
+            printIfDebug("");
+            printIfDebug("TOML data extracted from Jython script:");
+            for (String line: tomlText.toString().split("\\n", -1)) {
+                lineno += 1;
+                printIfDebug(lineno, line);
+            }
             tpr = Toml.parse(tomlText.toString());
-            printIfDebug(tpr.toJson());
+            if (tpr.hasErrors()) {
+                for (TomlParseError err: tpr.errors()) {
+                    System.err.println(err.toString());
+                }
+                if (debug) {
+                    throw new IOException("Error interpreting JBang TOML data.");
+                } else {
+                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--cli-debug' for details.");
+                }
+            }
         }
 
         // Process the TOML data
