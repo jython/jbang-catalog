@@ -27,4 +27,4 @@ jobs:
       - name: Test with JBang
         run: |
           export PATH="$HOME/.jbang/bin:$PATH"
-          jbang TestJythonCli.java execute --disable-ansi-colors --select-class=TestJythonCli
+          jbang src/TestJythonCli.java execute --disable-ansi-colors --select-class=TestJythonCli
