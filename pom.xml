@@ -27,7 +27,7 @@
                         </includes>
 
                         <eclipse>
-                            <file>${eclipse.style.file}</file>
+                            <file>${project.basedir}/eclipse-java-formatter.xml</file>
                         </eclipse>
 
                         <endWithNewline/>
