@@ -1,6 +1,8 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
+// spotless:off
 //DEPS org.tomlj:tomlj:1.1.1
+// spotless:on
 
 import java.io.*;
 import java.util.*;
