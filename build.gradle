@@ -14,19 +14,14 @@ repositories {
 spotless {
     // Define the formatting rules for Java files
     java {
-        // Target all Java files in any src subfolder (main, test, etc.)
         target 'src/**/*.java'
 
         googleJavaFormat("1.30.0").aosp()
         // eclipse().configFile('eclipse-java-formatter.xml')
 
-        // 2. Add standard import organization (ensuring consistent imports)
         importOrder()
         removeUnusedImports()
         toggleOffOn()
-
-        // Optional: Enforce license header (if you use one)
-        // licenseHeaderFile 'licence-header.txt'
     }
 }
 
@@ -39,4 +34,23 @@ tasks.register('hello') {
         println './gradlew spotlessCheck'
     }
 }
+
+tasks.register('fixJbangMarker') {
+    doLast {
+        def javaFiles = fileTree('src') {
+            include '**/*.java'
+        }
+        javaFiles.each { file ->
+            def lines = file.readLines()
+            if (lines && lines[0].startsWith('/// usr/bin/env')) {
+                lines[0] = '///usr/bin/env' + lines[0].substring(15) // remove space after ///
+                file.text = lines.join('\n')
+                println "Fixed JBang marker in: ${file}"
+            }
+        }
+    }
+}
+
+// Run this after formatting
+spotlessApply.finalizedBy 'fixJbangMarker'
 
