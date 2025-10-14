@@ -41,9 +41,10 @@ tasks.register('fixJbangMarker') {
             include '**/*.java'
         }
         javaFiles.each { file ->
+            def str = '///usr/bin/env jbang "$0" "$@" ; exit $?'
             def lines = file.readLines()
-            if (lines && lines[0].startsWith('/// ') && lines[0].contains('jbang')) {
-                lines[0] = '///usr/bin/env jbang "$0" "$@" ; exit $?'
+            if (lines && !lines[0].equals(str) && lines[0].startsWith('//') && lines[0].toLowerCase().contains('jbang')) {
+                lines[0] = str
                 file.text = lines.join('\n')
                 println "Fixed JBang marker in: ${file}"
             }
