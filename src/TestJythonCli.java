@@ -1,5 +1,3 @@
-/// usr/bin/env jbang "$0" "$@" ; exit $?
-
 // spotless:off
 //SOURCES JythonCli.java
 
