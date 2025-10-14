@@ -1,0 +1,42 @@
+// Apply the standard Java plugin
+plugins {
+    id 'java'
+    // Apply the Spotless plugin (using the same version as in the Kotlin DSL)
+    id 'com.diffplug.spotless' version '7.2.1'
+}
+
+// Standard repository configuration
+repositories {
+    mavenCentral()
+}
+
+// === Spotless Configuration ===
+spotless {
+    // Define the formatting rules for Java files
+    java {
+        // Target all Java files in any src subfolder (main, test, etc.)
+        target 'src/**/*.java'
+
+        // 1. Use the Google Java Format formatter.
+        googleJavaFormat("1.28.0").aosp()
+
+        // 2. Add standard import organization (ensuring consistent imports)
+        importOrder()
+        removeUnusedImports()
+        toggleOffOn()
+
+        // Optional: Enforce license header (if you use one)
+        // licenseHeaderFile 'licence-header.txt'
+    }
+}
+
+// Add a standard task for running the application
+tasks.register('hello') {
+    doLast {
+        println 'Spotless is now configured using Groovy DSL with Google Java Format. To format your code, run:'
+        println './gradlew spotlessApply'
+        println 'To check if files need formatting (useful for CI), run:'
+        println './gradlew spotlessCheck'
+    }
+}
+
