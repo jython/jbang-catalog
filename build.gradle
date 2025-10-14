@@ -42,7 +42,7 @@ tasks.register('fixJbangMarker') {
         }
         javaFiles.each { file ->
             def lines = file.readLines()
-            if (lines && lines[0].startsWith('/// usr/bin/env jbang')) {
+            if (lines && lines[0].startsWith('/// ') && lines[0].contains('jbang')) {
                 lines[0] = '///usr/bin/env jbang "$0" "$@" ; exit $?'
                 file.text = lines.join('\n')
                 println "Fixed JBang marker in: ${file}"
