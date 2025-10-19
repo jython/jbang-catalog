@@ -6,25 +6,22 @@
 //DEPS org.junit.platform:junit-platform-console:1.13.3
 // spotless:on
 
-import java.io.IOException;
-import java.io.StringReader;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.io.StringReader;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.ConsoleLauncher;
 
 /**
- * A class to run tests on aspects of {@link JythonCli} by delegating to
- * the JUnit console {@link ConsoleLauncher}.
+ * A class to run tests on aspects of {@link JythonCli} by delegating
+ * to the JUnit console {@link ConsoleLauncher}.
  */
 public class TestJythonCli {
 
-    static final String[] ARGS_DEBUG_FOO =
-            {"--cli-debug", "foo.py", "bar", "baz"};
-    static final String[] ARGS_FOO =
-            {"--version", "foo.py", "bar.py", "baz"};
+    static final String[] ARGS_DEBUG_FOO = {"--cli-debug", "foo.py", "bar", "baz"};
+    static final String[] ARGS_FOO = {"--version", "foo.py", "bar.py", "baz"};
     static final String[] ARGS_NONE = {"--cli-debug"};
 
     /** The {@code --cli-debug} flag is spotted */
@@ -59,8 +56,7 @@ public class TestJythonCli {
     @Test
     @Disabled("readJBangBlock does not throw on an unterminated block")
     void testUnterminated() throws IOException {
-        String script = 
-                """
+        String script = """
                 # /// jbang
                 # requires-jython = "2.7.2"
                 # requires-java = "17"
@@ -71,16 +67,15 @@ public class TestJythonCli {
     }
 
     /**
-     * An unterminated block may gobble up a {@code jbang} block. This
-     * is not detectable by {@link JythonCli} as the text of a
-     * {@code jbang} header could be legitimate content.
+     * An unterminated block may gobble up a {@code jbang} block. This is
+     * not detectable by {@link JythonCli} as the text of a {@code jbang}
+     * header could be legitimate content.
      */
     @Test
     @Disabled("readJBangBlock treats '/// jbang' inside another block as valid start")
     void testGobbledBlock() throws IOException {
         JythonCli cli = new JythonCli();
-        processScript(cli,
-                """
+        processScript(cli, """
                 # /// script
                 # requires-python = ">=3.11"
                 # /// jbang
@@ -101,8 +96,7 @@ public class TestJythonCli {
     @Test
     @Disabled("interpretJBangBlock treats '/// script' as valid terminator")
     void testCollision() throws IOException {
-        String script =
-                """
+        String script = """
                 # /// jbang
                 # requires-jython = "2.7.2"
                 # requires-java = "8"
@@ -120,8 +114,7 @@ public class TestJythonCli {
     @Test
     @Disabled("readJBangBlock does not throw on a second jbang block")
     void testTwoBlocks() throws IOException {
-        String script =
-                """
+        String script = """
                 # /// jbang
                 # requires-jython = "2.7.2"
                 # requires-java = "8"
@@ -143,8 +136,7 @@ public class TestJythonCli {
     /** Invalid TOML is an error. */
     @Test
     void testInvalidTOML() throws IOException {
-        String script =
-                """
+        String script = """
                 # /// jbang
                 # requires-jython = "2.7.4"
                 # requires-java = "21"
@@ -163,8 +155,8 @@ public class TestJythonCli {
     }
 
     /**
-     * Take an initialised {@link JythonCli} and have it process (but
-     * not run) the given {@code String} as if the contents of a file.
+     * Take an initialised {@link JythonCli} and have it process (but not
+     * run) the given {@code String} as if the contents of a file.
      *
      * @param cli to exercise
      * @param script to process as script

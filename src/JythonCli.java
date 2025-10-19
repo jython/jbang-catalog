@@ -4,10 +4,9 @@
 
 import java.io.*;
 import java.util.*;
-
 import org.tomlj.Toml;
-import org.tomlj.TomlParseResult;
 import org.tomlj.TomlParseError;
+import org.tomlj.TomlParseResult;
 
 public class JythonCli {
 
@@ -16,8 +15,8 @@ public class JythonCli {
      */
     String jythonVersion = "2.7.4";
     /**
-     * Default version of Java to use as determined by the JVM version running
-     * {@code jython-cli}. Only Java 8 or higher is supported.
+     * Default version of Java to use as determined by the JVM version
+     * running {@code jython-cli}. Only Java 8 or higher is supported.
      */
     String javaVersion = getJvmMajorVersion();
     /**
@@ -37,20 +36,20 @@ public class JythonCli {
      */
     String scriptFilename;
     /**
-     * (optional) TOML text block extracted from the Jython script specified on
-     * the command-line
+     * (optional) TOML text block extracted from the Jython script
+     * specified on the command-line
      */
     StringBuilder tomlText = new StringBuilder();
     /**
-     * (optional) TOML parsed result object from which runtime information is
-     * extracted
+     * (optional) TOML parsed result object from which runtime information
+     * is extracted
      */
     TomlParseResult tpr = null;
     /**
-     * Debug output can be specified by the {@code --cli-debug} command line
-     * option. If set, various critical state is displayed including the
-     * {@code jbang} block, its meaning as TOML and the arguments passed to
-     * ProcessBuilder.
+     * Debug output can be specified by the {@code --cli-debug} command
+     * line option. If set, various critical state is displayed including
+     * the {@code jbang} block, its meaning as TOML and the arguments
+     * passed to ProcessBuilder.
      */
     boolean debug = false;
 
@@ -58,8 +57,8 @@ public class JythonCli {
      * Determine the major version number of the JVM {@code jython-cli} is
      * running on.
      *
-     * @return the major version number of the current JVM, that is "8", "9",
-     * "10", etc.
+     * @return the major version number of the current JVM, that is "8",
+     *         "9", "10", etc.
      */
     static String getJvmMajorVersion() {
         String version = System.getProperty("java.version");
@@ -71,7 +70,8 @@ public class JythonCli {
 
     /**
      * Process the command line arguments, giving special tratment to the
-     * {@code --cli-debug} option and the (optional) Jython script specified.
+     * {@code --cli-debug} option and the (optional) Jython script
+     * specified.
      *
      * @param args program arguments as specified on the command-line
      * @throws IOException
@@ -97,8 +97,8 @@ public class JythonCli {
 
     /**
      * Read a script and parse out a {@code jbang} block if possible,
-     * later to be interpreted as TOML data. Errors to do with framing
-     * the block are detected here, while errors in content must wait.
+     * later to be interpreted as TOML data. Errors to do with framing the
+     * block are detected here, while errors in content must wait.
      *
      * @param script supplying text of the script
      * @throws IOException
@@ -111,7 +111,7 @@ public class JythonCli {
         boolean found = false;
         printIfDebug("");
         printIfDebug("TOML data in Jython script:");
-        while ((line = lines.readLine())!=null) {
+        while ((line = lines.readLine()) != null) {
             int lineno = lines.getLineNumber();
             if (found && !line.startsWith("# ")) {
                 found = false;
@@ -138,9 +138,9 @@ public class JythonCli {
 
     /**
      * Interpret the jbang block from the Jython script specified on the
-     * command-line as TOML data. The runtime options that are extracted from
-     * the TOML data will override default version specifications determined
-     * earlier.
+     * command-line as TOML data. The runtime options that are extracted
+     * from the TOML data will override default version specifications
+     * determined earlier.
      *
      * @throws IOException
      */
@@ -150,19 +150,20 @@ public class JythonCli {
             int lineno = 0;
             printIfDebug("");
             printIfDebug("TOML data extracted from Jython script:");
-            for (String line: tomlText.toString().split("\\n", -1)) {
+            for (String line : tomlText.toString().split("\\n", -1)) {
                 lineno += 1;
                 printIfDebug(lineno, line);
             }
             tpr = Toml.parse(tomlText.toString());
             if (tpr.hasErrors()) {
-                for (TomlParseError err: tpr.errors()) {
+                for (TomlParseError err : tpr.errors()) {
                     System.err.println(err.toString());
                 }
                 if (debug) {
                     throw new IOException("Error interpreting JBang TOML data.");
                 } else {
-                    throw new IOException("Error interpreting JBang TOML data. Re-run with '--cli-debug' for details.");
+                    throw new IOException(
+                            "Error interpreting JBang TOML data. Re-run with '--cli-debug' for details.");
                 }
             }
         }
@@ -182,13 +183,13 @@ public class JythonCli {
 
             // dependencies
             for (Object e : tpr.getArrayOrEmpty("dependencies").toList()) {
-                String dep = (String) e;
+                String dep = (String)e;
                 deps.add(dep);
             }
 
             // runtime-options
             for (Object e : tpr.getArrayOrEmpty("runtime-options").toList()) {
-                String ropt = (String) e;
+                String ropt = (String)e;
                 ropts.add(ropt);
             }
         }
@@ -238,8 +239,8 @@ public class JythonCli {
     }
 
     /**
-     * Shorthand to print a line of the source jbang block if {@link #debug} is
-     * set.
+     * Shorthand to print a line of the source jbang block if
+     * {@link #debug} is set.
      *
      * @param lineno source line number
      * @param line text captured to {@link #tomlText}
@@ -264,8 +265,8 @@ public class JythonCli {
     /**
      * Main {@code jython-cli} (JythonCli.java) program. The arguments are
      * exactly the same command-line arguments Jython itself supports as
-     * documented in
-     * <a href="https://www.jython.org/jython-old-sites/docs/using/cmdline.html">Jython
+     * documented in <a href=
+     * "https://www.jython.org/jython-old-sites/docs/using/cmdline.html">Jython
      * Command Line</a>
      *
      * @param args arguments to the program.
@@ -282,8 +283,7 @@ public class JythonCli {
             // Normally we have a script file (but it's optional)
             if (jythonCli.scriptFilename != null) {
                 Reader script = new BufferedReader(
-                    new InputStreamReader(
-                        new FileInputStream(jythonCli.scriptFilename)));
+                        new InputStreamReader(new FileInputStream(jythonCli.scriptFilename)));
                 jythonCli.readJBangBlock(script);
                 jythonCli.interpretJBangBlock();
             }
