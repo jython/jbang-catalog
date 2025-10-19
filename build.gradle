@@ -16,8 +16,8 @@ spotless {
     java {
         target 'src/**/*.java'
 
-        googleJavaFormat("1.30.0").aosp()
-        // eclipse().configFile('eclipse-java-formatter.xml')
+        // googleJavaFormat("1.30.0").aosp()
+        eclipse().configFile('Jython-2017-v2.xml')
 
         importOrder()
         removeUnusedImports()
