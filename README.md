@@ -252,18 +252,9 @@ Also test the jython-cli script with Java 8:
 * jbang run --java 8 jython-cli examples/turtle.py
 * jbang run --java 8 jython-cli examples/simpletest.py
 
-On Linux or MacOS the JythonCli.java script can be run directly for testing purposes:
-
-* ./JythonCli.java -V
-* ./JythonCli.java examples/banner.py
-
 ## Java Source File Formatting
 
-Use the `google-java-format` to format the `JythonCli.java` and `TestJythonCli.java` programs.
-
-```
-jbang run com.google.googlejavaformat:google-java-format:1.29.0 --aosp -r *.java
-```
+Use the Gradle task `spotlessApply` to format the `JythonCli.java` and `TestJythonCli.java` programs.
 
 ## Articles about Jython and JBang
 
