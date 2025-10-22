@@ -254,7 +254,11 @@ Also test the jython-cli script with Java 8:
 
 ## Java Source File Formatting
 
-Use the Gradle task `spotlessApply` to format the `JythonCli.java` and `TestJythonCli.java` programs.
+Use the Gradle task `spotlessApply` to format the `JythonCli.java` and `TestJythonCli.java` programs. Task `spotlessCheck` will only check if the Java source files are correctly formatted.
+
+The configuration file used by the Eclipse Java Formatter, when running the `spotless` tasks, can be imported into your preferred IDE (if supported).
+
+* See file `tools\eclipse-java-formatter\Jython-2017-v2.xml`
 
 ## Articles about Jython and JBang
 
