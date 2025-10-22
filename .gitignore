@@ -2,3 +2,5 @@
 /jython-jbang-catalog.iml
 
 /.vscode/
+/.gradle/
+/build/
