@@ -1,4 +1,4 @@
-//SOURCES JythonCli.java
+//SOURCES ../../main/java/JythonCli.java
 
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.junit.jupiter:junit-jupiter:5.13.3
