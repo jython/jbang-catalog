@@ -2,8 +2,8 @@
 # Add key=value pairs of SDKs to use below
 
 # Java
-java=8.0.452-tem
+java=17.0.16-tem
 
 # JBang
-jbang=0.126.1
+jbang=0.132.1
 
