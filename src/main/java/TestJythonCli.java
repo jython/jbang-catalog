@@ -1,10 +1,8 @@
-// spotless:off
 //SOURCES JythonCli.java
 
 //DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.junit.jupiter:junit-jupiter:5.13.3
 //DEPS org.junit.platform:junit-platform-console:1.13.3
-// spotless:on
 
 import static org.junit.jupiter.api.Assertions.*;
 
