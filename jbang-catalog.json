@@ -1,7 +1,7 @@
 {
   "aliases": {
     "jython-cli": {
-      "script-ref": "src/JythonCli.java",
+      "script-ref": "src/main/java/JythonCli.java",
       "description": "Run Jython 2.7"
     }
   }
