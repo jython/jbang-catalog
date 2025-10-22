@@ -16,7 +16,7 @@ spotless {
     java {
         target 'src/**/*.java'
 
-        eclipse().configFile('Jython-2017-v2.xml')
+        eclipse().configFile('tools/eclipse-java-formatter/Jython-2017-v2.xml')
 
         importOrder()
         removeUnusedImports()
