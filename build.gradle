@@ -17,8 +17,6 @@ repositories {
 spotless {
     // Define the formatting rules for Java files
     java {
-        target 'src/**/*.java'
-
         eclipse().configFile('tools/eclipse-java-formatter/Jython-2017-v2.xml')
 
         importOrder()
