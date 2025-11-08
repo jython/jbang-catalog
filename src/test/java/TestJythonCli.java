@@ -1,4 +1,3 @@
-//DEPS org.tomlj:tomlj:1.1.1
 //DEPS org.junit.jupiter:junit-jupiter:5.14.1
 //DEPS org.junit.platform:junit-platform-console:1.14.1
 
