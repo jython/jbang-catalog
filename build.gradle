@@ -1,8 +1,11 @@
+import dev.jbang.gradle.tasks.JBangTask
+
 // Apply the standard Java plugin
 plugins {
     id 'java'
     // Apply the Spotless plugin (using the same version as in the Kotlin DSL)
     id 'com.diffplug.spotless' version '7.2.1'
+    id 'dev.jbang' version '0.3.0'
 }
 
 // Standard repository configuration
@@ -22,6 +25,16 @@ spotless {
         removeUnusedImports()
         toggleOffOn()
     }
+}
+
+// Define a custom task to run jython-cli tests
+tasks.register("runTests", JBangTask) {
+    // Specify the script file to run
+    script = "src/test/java/TestJythonCli.java"
+
+    // Optional: Pass arguments to the script
+    jbangArgs = ["--java", "17"]
+    args = ["execute", "--disable-ansi-colors", "--select-class=TestJythonCli"]
 }
 
 // Add a standard task for running the application
