@@ -4,14 +4,7 @@
       "script-ref": "JythonCli.java",
       "description": "Run Jython 2.7",
       "properties": {
-          "jbang.app.version": "2.7.4"
-      }
-    },
-    "jython-cli-next": {
-      "script-ref": "JythonCli.java",
-      "description": "Run Jython 2.7.5b1",
-      "properties": {
-        "jbang.app.version": "2.7.5b1"
+        "jbang.app.version": "2.7.4"
       }
     }
   }
