@@ -77,8 +77,8 @@ public class JythonCli {
      * @throws IOException
      */
     void initEnvironment(String[] args) throws IOException {
-        // Set Jython version to jbang.jython.version property if set, otherwise use default
-        String version = System.getProperty("jbang.jython.version");
+        // Set Jython version to jbang.app.version property if set, otherwise use default
+        String version = System.getProperty("jbang.app.version");
         if (version != null) {
             jythonVersion = version;
         }
